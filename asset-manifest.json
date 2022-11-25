@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/WordDisks/static/css/main.caf5056e.css",
+    "main.js": "/WordDisks/static/js/main.90609274.js",
+    "index.html": "/WordDisks/index.html",
+    "main.caf5056e.css.map": "/WordDisks/static/css/main.caf5056e.css.map",
+    "main.90609274.js.map": "/WordDisks/static/js/main.90609274.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.caf5056e.css",
+    "static/js/main.90609274.js"
+  ]
+}
