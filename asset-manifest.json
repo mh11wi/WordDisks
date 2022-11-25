@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/WordDisks/static/css/main.caf5056e.css",
-    "main.js": "/WordDisks/static/js/main.90609274.js",
+    "main.css": "/WordDisks/static/css/main.5b78d277.css",
+    "main.js": "/WordDisks/static/js/main.7aabf58a.js",
+    "static/media/OpenDyslexic-Regular.woff2": "/WordDisks/static/media/OpenDyslexic-Regular.30ddd7034b273ecf2b6a.woff2",
     "index.html": "/WordDisks/index.html",
-    "main.caf5056e.css.map": "/WordDisks/static/css/main.caf5056e.css.map",
-    "main.90609274.js.map": "/WordDisks/static/js/main.90609274.js.map"
+    "main.5b78d277.css.map": "/WordDisks/static/css/main.5b78d277.css.map",
+    "main.7aabf58a.js.map": "/WordDisks/static/js/main.7aabf58a.js.map"
   },
   "entrypoints": [
-    "static/css/main.caf5056e.css",
-    "static/js/main.90609274.js"
+    "static/css/main.5b78d277.css",
+    "static/js/main.7aabf58a.js"
   ]
 }
