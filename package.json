@@ -13,7 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "random-words": "^1.2.0",
     "react": "^18.2.0",
-    "react-disks": "^1.1.1",
+    "react-disks": "^1.2.0",
     "react-dom": "^18.2.0"
   },
   "scripts": {

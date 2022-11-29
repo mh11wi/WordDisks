@@ -79,7 +79,7 @@ function newGame(wordsList, numberOfWords, lettersPerWord) {
 function App() {
   const [wordsList, setWordsList] = useState(null);
   const [disksText, setDisksText] = useState(null);
-  const [numberOfDisks, setNumberOfDisks] = useState(3);
+  const [numberOfDisks, setNumberOfDisks] = useState(5);
   const [lettersPerDisk, setLettersPerDisk] = useState(4);
   const [hasWon, setHasWon] = useState(false);
   
