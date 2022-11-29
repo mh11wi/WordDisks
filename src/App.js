@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import teal from '@mui/material/colors/teal';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import ReactDisks from 'react-disks';
+import MenuBar from './components/MenuBar';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import './App.css';
 
 const theme = createTheme({
@@ -70,9 +71,12 @@ function newGame(wordsList, numberOfWords, lettersPerWord) {
   const words = generateRandomWords(wordsList, numberOfWords, lettersPerWord);
   const letterMatrix = toLetterMatrix(words);
   const disksText = transpose(letterMatrix);
-  do {
-    randomRotate(disksText);
-  } while (isSolved(wordsList, disksText));
+  randomRotate(disksText);
+  
+  if (isSolved(wordsList, disksText)) {
+    return newGame(wordsList, numberOfWords, lettersPerWord);
+  }
+  
   return disksText;
 }
 
@@ -99,20 +103,20 @@ function App() {
     setTimeout(() => setHasWon(isSolved(wordsList, rotatedDisksText)), 750);
   }
   
+  const handleClickNewGame = () => {
+    setDisksText(newGame(wordsList,lettersPerDisk, numberOfDisks));
+    setHasWon(false);
+  }
+  
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="relative">
-            <Toolbar>
-              <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
-                Word Disks
-              </Typography>
-              <Button href="https://mh11wi.github.io" color="inherit">Home</Button>
-            </Toolbar>
-          </AppBar>
+          <MenuBar 
+            handleClickNewGame={handleClickNewGame}
+          />
         </Box>
-        <Box role="main" sx={{ flexGrow: 1, height: "calc(100% - 64px)"}}>
+        <Box role="main" sx={{ flexGrow: 1, height: "calc(100% - 4rem)"}}>
           <ReactDisks 
             disksText={disksText}
             theme={theme.palette.primary}
