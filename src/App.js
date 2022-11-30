@@ -114,6 +114,10 @@ function App() {
         <Box sx={{ flexGrow: 1 }}>
           <MenuBar 
             handleClickNewGame={handleClickNewGame}
+            numberOfDisks={numberOfDisks}
+            setNumberOfDisks={setNumberOfDisks}
+            lettersPerDisk={lettersPerDisk}
+            setLettersPerDisk={setLettersPerDisk}
           />
         </Box>
         <Box role="main" sx={{ flexGrow: 1, height: "calc(100% - 4rem)"}}>

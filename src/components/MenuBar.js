@@ -43,6 +43,10 @@ const MenuBar = (props) => {
         <SettingsDialog
           open={settingsOpen}
           onClose={handleCloseSettings}
+          numberOfDisks={props.numberOfDisks}
+          setNumberOfDisks={props.setNumberOfDisks}
+          lettersPerDisk={props.lettersPerDisk}
+          setLettersPerDisk={props.setLettersPerDisk}
         />
         <IconButton aria-label="New Game" onClick={props.handleClickNewGame} color="inherit">
           <FastForward />
