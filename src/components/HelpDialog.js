@@ -34,17 +34,17 @@ const HelpDialog = (props) => {
             <ListItem disablePadding>
               <ListItemText primary="You can rotate a disk by clicking on it, and then clicking either the clockwise or counterclockwise arrow." />
             </ListItem>
-            <ListItem>
+            <ListItem sx={{ mt: 1 }}>
               <ListItemIcon>
                 <Settings />
               </ListItemIcon>
-              <ListItemText primary="Open the settings menu to adjust the game" disableTypography />
+              <ListItemText primary="Open the settings menu to adjust the game" />
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <FastForward />
               </ListItemIcon>
-              <ListItemText primary="Start a new game with the same settings" disableTypography />
+              <ListItemText primary="Start a new game with the same settings" />
             </ListItem>
           </List>
         </DialogContentText>

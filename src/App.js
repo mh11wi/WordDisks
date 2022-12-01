@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import teal from '@mui/material/colors/teal';
 import Box from '@mui/material/Box';
@@ -104,7 +104,7 @@ function App() {
     if (hasWon) {
       const element = document.querySelector('.DisksContainer');
       party.confetti(element, {
-        count: party.variation.range(50, 100),
+        count: party.variation.range(50, 70),
       });
     }
   }, [hasWon]);
