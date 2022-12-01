@@ -13,7 +13,7 @@ const MenuBar = (props) => {
     if (props.hasWon) {
       actionRef.current.focusVisible();
     }
-  }, [props.hasWon]);
+  }, [actionRef, props.hasWon]);
   
   const handleClickHelp = () => {
     setHelpOpen(true);
