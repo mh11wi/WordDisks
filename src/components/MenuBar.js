@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 import { FastForward, Help, Home, Settings } from '@mui/icons-material';
 import HelpDialog from './HelpDialog';
 import SettingsDialog from './SettingsDialog';
 
 const MenuBar = (props) => {
+  const actionRef = createRef();
   const [helpOpen, setHelpOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  
+  useEffect(() => {
+    if (props.hasWon) {
+      actionRef.current.focusVisible();
+    }
+  }, [props.hasWon]);
   
   const handleClickHelp = () => {
     setHelpOpen(true);
@@ -48,7 +55,7 @@ const MenuBar = (props) => {
           lettersPerDisk={props.lettersPerDisk}
           setLettersPerDisk={props.setLettersPerDisk}
         />
-        <IconButton aria-label="New Game" onClick={props.handleClickNewGame} color="inherit">
+        <IconButton action={actionRef} aria-label="New Game" onClick={props.handleClickNewGame} color="inherit">
           <FastForward />
         </IconButton>
         <IconButton aria-label="Home" href="https://mh11wi.github.io" color="inherit">
