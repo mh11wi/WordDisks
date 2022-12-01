@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import teal from '@mui/material/colors/teal';
 import Box from '@mui/material/Box';
+import party from "party-js";
 import ReactDisks from 'react-disks';
 import MenuBar from './components/MenuBar';
 import '@fontsource/roboto/300.css';
@@ -99,8 +100,17 @@ function App() {
     }
   }, [wordsList, numberOfDisks, lettersPerDisk]);
   
+  useEffect(() => {
+    if (hasWon) {
+      const element = document.querySelector('.DisksContainer');
+      party.confetti(element, {
+        count: party.variation.range(50, 100),
+      });
+    }
+  }, [hasWon]);
+  
   const onRotate = (rotatedDisksText) => {
-    setTimeout(() => setHasWon(isSolved(wordsList, rotatedDisksText)), 750);
+    setTimeout(() => setHasWon(isSolved(wordsList, rotatedDisksText)), 500);
   }
   
   const handleClickNewGame = () => {
