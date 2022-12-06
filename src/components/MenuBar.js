@@ -54,6 +54,8 @@ const MenuBar = (props) => {
           setNumberOfDisks={props.setNumberOfDisks}
           lettersPerDisk={props.lettersPerDisk}
           setLettersPerDisk={props.setLettersPerDisk}
+          useUppercase={props.useUppercase}
+          setUseUppercase={props.setUseUppercase}
         />
         <IconButton action={actionRef} aria-label="New Game" onClick={props.handleClickNewGame} color="inherit">
           <FastForward />

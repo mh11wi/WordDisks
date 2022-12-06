@@ -5,3 +5,11 @@ html, body, #root, .App {
 .App {
   overflow: hidden;
 }
+
+.uppercase .Disk {
+  text-transform: uppercase;
+}
+
+.lowercase .Disk {
+  text-transform: lowercase;
+}

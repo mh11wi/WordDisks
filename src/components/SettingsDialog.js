@@ -7,6 +7,7 @@ import {
   DialogContentText, 
   DialogTitle,
   Slider,
+  Switch,
   Typography
 } from '@mui/material';
 
@@ -34,6 +35,10 @@ const SettingsDialog = (props) => {
     props.setNumberOfDisks(newValue);
   }
   
+  const onUppercaseChange = (event, newValue) => {
+    props.setUseUppercase(newValue);
+  }
+  
   return (
     <Dialog
       aria-labelledby="settings-dialog-title"
@@ -59,7 +64,7 @@ const SettingsDialog = (props) => {
             marks={wordsMarks}
           />
         </DialogContentText>
-        <DialogContentText component="div">
+        <DialogContentText component="div" sx={{ mb: 3 }}>
           <Typography id="disks-slider">
             Number of disks
           </Typography>
@@ -71,6 +76,16 @@ const SettingsDialog = (props) => {
             min={3}
             max={7}
             marks={disksMarks}
+          />
+        </DialogContentText>
+        <DialogContentText component="div">
+          <Typography id="uppercase-switch">
+            Uppercase letters
+          </Typography>
+          <Switch
+            inputProps={{ 'aria-labelledby': 'uppercase-switch' }}
+            checked={props.useUppercase}
+            onChange={onUppercaseChange}
           />
         </DialogContentText>
       </DialogContent>

@@ -86,6 +86,7 @@ function App() {
   const [disksText, setDisksText] = useState(null);
   const [numberOfDisks, setNumberOfDisks] = useState(5);
   const [lettersPerDisk, setLettersPerDisk] = useState(4);
+  const [useUppercase, setUseUppercase] = useState(false);
   const [hasWon, setHasWon] = useState(false);
   
   useEffect(() => {
@@ -128,10 +129,12 @@ function App() {
             setNumberOfDisks={setNumberOfDisks}
             lettersPerDisk={lettersPerDisk}
             setLettersPerDisk={setLettersPerDisk}
+            useUppercase={useUppercase}
+            setUseUppercase={setUseUppercase}
             hasWon={hasWon}
           />
         </Box>
-        <Box role="main" sx={{ flexGrow: 1, height: "calc(100% - 4rem)"}}>
+        <Box role="main" className={useUppercase ? 'uppercase': 'lowercase'} sx={{ flexGrow: 1, height: "calc(100% - 4rem)"}}>
           <ReactDisks 
             disksText={disksText}
             theme={theme.palette.primary}

@@ -12,3 +12,5 @@ The following settings are configurable in the game:
 - number of words
 
 - number of disks
+
+- whether letters should be uppercase or lowercase
