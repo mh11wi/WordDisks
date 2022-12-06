@@ -53,7 +53,7 @@ const SettingsDialog = (props) => {
             aria-labelledby="words-slider"
             value={props.lettersPerDisk}
             onChangeCommitted={onWordsChange}
-            step={2}
+            step={null}
             min={2}
             max={8}
             marks={wordsMarks}
@@ -67,7 +67,7 @@ const SettingsDialog = (props) => {
             aria-labelledby="disks-slider"
             value={props.numberOfDisks}
             onChangeCommitted={onDisksChange}
-            step={1}
+            step={null}
             min={3}
             max={7}
             marks={disksMarks}
