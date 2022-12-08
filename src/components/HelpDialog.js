@@ -25,7 +25,7 @@ const HelpDialog = (props) => {
       onClose={props.onClose}
     >
       <DialogTitle id="help-dialog-title">How To Play</DialogTitle>
-      <DialogContent id="help-dialog-content">
+      <DialogContent id="help-dialog-content" dividers={true} sx={{ p: 0, pl: 2 }}>
         <DialogContentText component="div">
           <List>
             <ListItem disablePadding>
@@ -49,12 +49,10 @@ const HelpDialog = (props) => {
           </List>
         </DialogContentText>
       </DialogContent>
-      <DialogContent dividers={true}>
-        <DialogContentText component="div">
+      <DialogActions>
+        <DialogContentText sx={{ ml: 2, flexGrow: 1 }}>
           Like Word Disks? Try <Link href="https://mh11wi.github.io/SumDisks/" target="_blank">Sum Disks</Link>!
         </DialogContentText>
-      </DialogContent>
-      <DialogActions>
         <Button autoFocus onClick={props.onClose}>Close</Button>
       </DialogActions>
     </Dialog>
