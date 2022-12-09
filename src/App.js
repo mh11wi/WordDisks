@@ -122,19 +122,17 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Box sx={{ flexGrow: 1 }}>
-          <MenuBar 
-            handleClickNewGame={handleClickNewGame}
-            numberOfDisks={numberOfDisks}
-            setNumberOfDisks={setNumberOfDisks}
-            lettersPerDisk={lettersPerDisk}
-            setLettersPerDisk={setLettersPerDisk}
-            useUppercase={useUppercase}
-            setUseUppercase={setUseUppercase}
-            hasWon={hasWon}
-          />
-        </Box>
-        <Box role="main" className={useUppercase ? 'uppercase': 'lowercase'} sx={{ flexGrow: 1, height: "calc(100% - 3rem)"}}>
+        <MenuBar 
+          handleClickNewGame={handleClickNewGame}
+          numberOfDisks={numberOfDisks}
+          setNumberOfDisks={setNumberOfDisks}
+          lettersPerDisk={lettersPerDisk}
+          setLettersPerDisk={setLettersPerDisk}
+          useUppercase={useUppercase}
+          setUseUppercase={setUseUppercase}
+          hasWon={hasWon}
+        />
+        <Box role="main" className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`} sx={{ margin: "auto", height: "calc(100% - 3rem)" }}>
           <ReactDisks 
             disksText={disksText}
             theme={theme.palette.primary}
