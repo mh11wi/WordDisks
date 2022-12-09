@@ -25,7 +25,7 @@ const HelpDialog = (props) => {
       onClose={props.onClose}
     >
       <DialogTitle id="help-dialog-title">How To Play</DialogTitle>
-      <DialogContent id="help-dialog-content" dividers={true} sx={{ p: 0, pl: 2 }}>
+      <DialogContent id="help-dialog-content" dividers={true} sx={{ px: 2, py: 0 }}>
         <DialogContentText component="div">
           <List>
             <ListItem disablePadding>
@@ -34,13 +34,13 @@ const HelpDialog = (props) => {
             <ListItem disablePadding>
               <ListItemText primary="You can rotate a disk by clicking on it, and then clicking either the clockwise or counterclockwise arrow." />
             </ListItem>
-            <ListItem sx={{ mt: 1 }}>
+            <ListItem sx={{ mt: 1, px: 0 }}>
               <ListItemIcon>
                 <Settings />
               </ListItemIcon>
               <ListItemText primary="Open the settings menu to adjust the game" />
             </ListItem>
-            <ListItem>
+            <ListItem sx={{ px: 0 }}>
               <ListItemIcon>
                 <FastForward />
               </ListItemIcon>
@@ -50,7 +50,7 @@ const HelpDialog = (props) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <DialogContentText sx={{ ml: 2, flexGrow: 1 }}>
+        <DialogContentText sx={{ ml: 1, flexGrow: 1 }}>
           Like Word Disks? Try <Link href="https://mh11wi.github.io/SumDisks/" target="_blank">Sum Disks</Link>!
         </DialogContentText>
         <Button autoFocus onClick={props.onClose}>Close</Button>

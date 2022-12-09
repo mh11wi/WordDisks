@@ -50,7 +50,7 @@ const SettingsDialog = (props) => {
     >
       <DialogTitle id="settings-dialog-title">Settings</DialogTitle>
       <DialogContent id="settings-dialog-content" dividers={true}>
-        <DialogContentText component="div" sx={{ mb: 2 }}>
+        <DialogContentText component="div" sx={{ mb: 1 }}>
           <Typography id="words-slider">
             Number of words
           </Typography>
@@ -64,7 +64,7 @@ const SettingsDialog = (props) => {
             marks={wordsMarks}
           />
         </DialogContentText>
-        <DialogContentText component="div" sx={{ mb: 2 }}>
+        <DialogContentText component="div" sx={{ mb: 1 }}>
           <Typography id="disks-slider">
             Number of disks
           </Typography>
