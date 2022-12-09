@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/WordDisks/static/css/main.cc33b61a.css",
-    "main.js": "/WordDisks/static/js/main.c7551974.js",
+    "main.css": "/WordDisks/static/css/main.09db935b.css",
+    "main.js": "/WordDisks/static/js/main.8bdec062.js",
     "static/media/OpenDyslexic-Regular.woff2": "/WordDisks/static/media/OpenDyslexic-Regular.30ddd7034b273ecf2b6a.woff2",
     "static/media/roboto-all-500-normal.woff": "/WordDisks/static/media/roboto-all-500-normal.0ab669b7a0d19b178f57.woff",
     "static/media/roboto-all-700-normal.woff": "/WordDisks/static/media/roboto-all-700-normal.a457fde362a540fcadff.woff",
@@ -36,11 +36,11 @@
     "static/media/roboto-greek-ext-300-normal.woff2": "/WordDisks/static/media/roboto-greek-ext-300-normal.35b9d6be04b95f0f0530.woff2",
     "static/media/roboto-greek-ext-700-normal.woff2": "/WordDisks/static/media/roboto-greek-ext-700-normal.bd9854c751441ccc1a70.woff2",
     "index.html": "/WordDisks/index.html",
-    "main.cc33b61a.css.map": "/WordDisks/static/css/main.cc33b61a.css.map",
-    "main.c7551974.js.map": "/WordDisks/static/js/main.c7551974.js.map"
+    "main.09db935b.css.map": "/WordDisks/static/css/main.09db935b.css.map",
+    "main.8bdec062.js.map": "/WordDisks/static/js/main.8bdec062.js.map"
   },
   "entrypoints": [
-    "static/css/main.cc33b61a.css",
-    "static/js/main.c7551974.js"
+    "static/css/main.09db935b.css",
+    "static/js/main.8bdec062.js"
   ]
 }
