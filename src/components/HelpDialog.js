@@ -38,7 +38,7 @@ const HelpDialog = (props) => {
               <ListItemIcon>
                 <Settings />
               </ListItemIcon>
-              <ListItemText primary="Open the settings menu to adjust the game" />
+              <ListItemText primary="Open the settings menu for the game" />
             </ListItem>
             <ListItem sx={{ px: 0 }}>
               <ListItemIcon>
