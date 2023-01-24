@@ -84,9 +84,9 @@ function newGame(wordsList, numberOfWords, lettersPerWord) {
 function App() {
   const [wordsList, setWordsList] = useState(null);
   const [disksText, setDisksText] = useState(null);
-  const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('numberOfDisks')) || 5);
-  const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('lettersPerDisk')) || 4);
-  const [useUppercase, setUseUppercase] = useState(localStorage.getItem('useUppercase') === 'true');
+  const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 5);
+  const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
+  const [useUppercase, setUseUppercase] = useState(localStorage.getItem('wd-useUppercase') === 'true');
   const [hasWon, setHasWon] = useState(false);
   
   useEffect(() => {
@@ -121,17 +121,17 @@ function App() {
   
   const handleChangeNumberOfDisks = (val) => {
     setNumberOfDisks(val);
-    localStorage.setItem('numberOfDisks', val);
+    localStorage.setItem('wd-numberOfDisks', val);
   }
   
   const handleChangeLettersPerDisk = (val) => {
     setLettersPerDisk(val);
-    localStorage.setItem('lettersPerDisk', val);
+    localStorage.setItem('wd-lettersPerDisk', val);
   }
   
   const handleChangeUseUppercase = (val) => {
     setUseUppercase(val);
-    localStorage.setItem('useUppercase', val);
+    localStorage.setItem('wd-useUppercase', val);
   }
   
   return (
