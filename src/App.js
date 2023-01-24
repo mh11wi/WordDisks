@@ -84,9 +84,9 @@ function newGame(wordsList, numberOfWords, lettersPerWord) {
 function App() {
   const [wordsList, setWordsList] = useState(null);
   const [disksText, setDisksText] = useState(null);
-  const [numberOfDisks, setNumberOfDisks] = useState(5);
-  const [lettersPerDisk, setLettersPerDisk] = useState(4);
-  const [useUppercase, setUseUppercase] = useState(false);
+  const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('numberOfDisks')) || 5);
+  const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('lettersPerDisk')) || 4);
+  const [useUppercase, setUseUppercase] = useState(localStorage.getItem('useUppercase') === 'true');
   const [hasWon, setHasWon] = useState(false);
   
   useEffect(() => {
@@ -119,17 +119,32 @@ function App() {
     setHasWon(false);
   }
   
+  const handleChangeNumberOfDisks = (val) => {
+    setNumberOfDisks(val);
+    localStorage.setItem('numberOfDisks', val);
+  }
+  
+  const handleChangeLettersPerDisk = (val) => {
+    setLettersPerDisk(val);
+    localStorage.setItem('lettersPerDisk', val);
+  }
+  
+  const handleChangeUseUppercase = (val) => {
+    setUseUppercase(val);
+    localStorage.setItem('useUppercase', val);
+  }
+  
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
         <MenuBar 
           handleClickNewGame={handleClickNewGame}
           numberOfDisks={numberOfDisks}
-          setNumberOfDisks={setNumberOfDisks}
+          setNumberOfDisks={handleChangeNumberOfDisks}
           lettersPerDisk={lettersPerDisk}
-          setLettersPerDisk={setLettersPerDisk}
+          setLettersPerDisk={handleChangeLettersPerDisk}
           useUppercase={useUppercase}
-          setUseUppercase={setUseUppercase}
+          setUseUppercase={handleChangeUseUppercase}
           hasWon={hasWon}
         />
         <Box role="main" className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`} sx={{ margin: "auto", height: "calc(100% - 3rem)" }}>
