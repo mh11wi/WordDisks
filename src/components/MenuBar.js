@@ -44,8 +44,8 @@ const MenuBar = (props) => {
     setSettingsOpen(false);
   }
   
-  const handleClickDictionary = () => {
-    setColumnWords(props.getColumnWords());
+  const handleClickDictionary = async () => {
+    setColumnWords(await props.getColumnWords());
     setDictionaryOpen(true);
   }
   

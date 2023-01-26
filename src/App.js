@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import teal from '@mui/material/colors/teal';
+import { green, teal } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import party from "party-js";
 import ReactDisks from 'react-disks';
@@ -17,7 +17,12 @@ const theme = createTheme({
       main: teal[500],
       light: teal[100],
       dark: teal[800]
-    }
+    },
+    success: {
+      light: green[100],
+      main: green[500],
+      dark: green[900]
+    },
   },
 });
 
@@ -140,15 +145,29 @@ function App() {
     localStorage.setItem('wd-useUppercase', val);
   }
   
-  const getColumnWords = () => {
+  const getColumnWords = async () => {
     const columnWords = [];
     const letterMatrix = transpose(rotatedDisksText);
     for (let i=0; i < letterMatrix.length; i++) {
-      const word = letterMatrix[i].join('')
-      columnWords.push({
-        word,
-        definition: `${wordsList.includes(word) ? 'TBD' : 'Not in words list'}`
-      });
+      const word = letterMatrix[i].join('');
+      let details;
+      if (wordsList.includes(word)) {
+        await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+        .then(res => res.json())
+        .then(
+          (result) => {
+            details = (
+              <Fragment>
+                <strong>({result[0].meanings[0].partOfSpeech})</strong> {result[0].meanings[0].definitions[0].definition}
+              </Fragment>
+            );
+          },
+          (error) => {
+            details = 'In word list, but a definition could not be loaded at this time.';
+          }
+        );
+      }
+      columnWords.push({ word, details });
     }
     return columnWords;
   }

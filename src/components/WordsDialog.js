@@ -42,10 +42,17 @@ const WordsDialog = (props) => {
               <TableBody>
                 {props.data.map((row, index) => {
                   return (
-                    <TableRow key={index}>
+                    <TableRow 
+                      key={index}
+                      sx={{
+                        '&:last-child td, &:last-child th': { border: 0 },
+                        backgroundColor: row.details ? theme.palette.success.light : 'inherit',
+                        td: { color: row.details ? theme.palette.success.dark : 'inherit' }
+                      }}
+                    >
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{row.word}</TableCell>
-                      <TableCell>{row.definition}</TableCell>
+                      <TableCell>{row.details || 'Not in word list.'}</TableCell>
                     </TableRow>
                   )
                 })}
