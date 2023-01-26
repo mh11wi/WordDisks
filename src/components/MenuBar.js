@@ -1,13 +1,18 @@
 import React, { createRef, useEffect, useState } from 'react';
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
-import { FastForward, Help, Home, Settings } from '@mui/icons-material';
+import { FastForward, Help, Home, Lightbulb, MenuBook, Settings } from '@mui/icons-material';
 import HelpDialog from './HelpDialog';
 import SettingsDialog from './SettingsDialog';
+import WordsDialog from './WordsDialog';
+import TipsDialog from './TipsDialog';
 
 const MenuBar = (props) => {
   const actionRef = createRef();
   const [helpOpen, setHelpOpen] = useState(true);
+  const [tipsOpen, setTipsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [dictionaryOpen, setDictionaryOpen] = useState(false);
+  const [columnWords, setColumnWords] = useState(null);
   
   useEffect(() => {
     if (props.hasWon) {
@@ -21,7 +26,15 @@ const MenuBar = (props) => {
   
   const handleCloseHelp = () => {
     setHelpOpen(false);
-  };
+  }
+  
+  const handleClickTips = () => {
+    setTipsOpen(true);
+  }
+  
+  const handleCloseTips = () => {
+    setTipsOpen(false);
+  }
   
   const handleClickSettings = () => {
     setSettingsOpen(true);
@@ -29,14 +42,20 @@ const MenuBar = (props) => {
   
   const handleCloseSettings = () => {
     setSettingsOpen(false);
-  };
+  }
+  
+  const handleClickDictionary = () => {
+    setColumnWords(props.getColumnWords());
+    setDictionaryOpen(true);
+  }
+  
+  const handleCloseDictionary = () => {
+    setDictionaryOpen(false);
+  }
   
   return (
     <AppBar position="relative">
       <Toolbar variant="dense">
-        <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
-          Word Disks
-        </Typography>
         <IconButton aria-label="Help" onClick={handleClickHelp} color="inherit">
           <Help />
         </IconButton>
@@ -44,6 +63,28 @@ const MenuBar = (props) => {
           open={helpOpen}
           onClose={handleCloseHelp}
         />
+        
+        <IconButton aria-label="Tips" onClick={handleClickTips} color="inherit">
+          <Lightbulb />
+        </IconButton>
+        <TipsDialog
+          open={tipsOpen}
+          onClose={handleCloseTips}
+        />
+        
+        <IconButton aria-label="Dictionary" onClick={handleClickDictionary} color="inherit">
+          <MenuBook />
+        </IconButton>
+        <WordsDialog
+          open={dictionaryOpen}
+          onClose={handleCloseDictionary}
+          data={columnWords}
+        />
+        
+        <Typography variant="h5" component="h1" align="center" sx={{ fontWeight: 500, flexGrow: 1 }}>
+          Word Disks
+        </Typography>
+        
         <IconButton aria-label="Settings" onClick={handleClickSettings} color="inherit">
           <Settings />
         </IconButton>
@@ -57,9 +98,11 @@ const MenuBar = (props) => {
           useUppercase={props.useUppercase}
           setUseUppercase={props.setUseUppercase}
         />
+        
         <IconButton action={actionRef} aria-label="New Game" onClick={props.handleClickNewGame} color="inherit">
           <FastForward />
         </IconButton>
+        
         <IconButton aria-label="Home" href="https://mh11wi.github.io" color="inherit">
           <Home />
         </IconButton>

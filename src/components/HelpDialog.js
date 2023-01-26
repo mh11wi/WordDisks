@@ -12,7 +12,7 @@ import {
   ListItemIcon,
   ListItemText
 } from '@mui/material';
-import { FastForward, Settings } from '@mui/icons-material';
+import { FastForward, Help, Lightbulb, MenuBook, Settings } from '@mui/icons-material';
 
 const HelpDialog = (props) => {
   return (
@@ -25,26 +25,65 @@ const HelpDialog = (props) => {
       onClose={props.onClose}
     >
       <DialogTitle id="help-dialog-title">How To Play</DialogTitle>
-      <DialogContent id="help-dialog-content" dividers={true} sx={{ px: 2, py: 0 }}>
+      <DialogContent id="help-dialog-content" dividers={true} sx={{ p: 0 }}>
         <DialogContentText component="div">
           <List>
-            <ListItem disablePadding>
-              <ListItemText primary="Rotate the disks so every column of letters spell a valid word in my list." />
+            <ListItem>
+              <ListItemText>
+                Rotate the disks so every column of letters spell a valid word in my list.
+              </ListItemText>
             </ListItem>
-            <ListItem disablePadding>
-              <ListItemText primary="You can rotate a disk by clicking on it, and then clicking either the clockwise or counterclockwise arrow." />
+            
+            <ListItem>
+              <ListItemText>
+                You can rotate a disk by clicking on it, and then clicking either the clockwise or counterclockwise arrows that appear.
+              </ListItemText>
             </ListItem>
-            <ListItem sx={{ mt: 1, px: 0 }}>
-              <ListItemIcon>
-                <Settings />
-              </ListItemIcon>
-              <ListItemText primary="Open the settings menu for the game" />
+            
+            <ListItem alignItems="flex-start" sx={{ flexDirection: 'column', pb: 0 }}>
+              <ListItemText>
+                If you ever feel stuck, the following icons may assist you:
+              </ListItemText>
+              <List>
+                <ListItem sx={{ py: 0 }}>
+                  <ListItemIcon>
+                    <Help />
+                  </ListItemIcon>
+                  <ListItemText primary="Open this help dialog again" />
+                </ListItem>
+                <ListItem sx={{ py: 0 }}>
+                  <ListItemIcon>
+                    <Lightbulb />
+                  </ListItemIcon>
+                  <ListItemText primary="Read some tips & tidbits about the game" />
+                </ListItem>
+                <ListItem sx={{ py: 0 }}>
+                  <ListItemIcon>
+                    <MenuBook />
+                  </ListItemIcon>
+                  <ListItemText primary="Check the words formed in each column" />
+                </ListItem>
+              </List>
             </ListItem>
-            <ListItem sx={{ px: 0 }}>
-              <ListItemIcon>
-                <FastForward />
-              </ListItemIcon>
-              <ListItemText primary="Start a new game with the same settings" />
+            
+            <ListItem alignItems="flex-start" sx={{ flexDirection: 'column', pb: 0 }}>
+              <ListItemText>
+                Play as much as you like! Each game is randomly generated, so the fun is endless. When you are ready to try another, use the following icons:
+              </ListItemText>
+              <List>
+                <ListItem sx={{ py: 0 }}>
+                  <ListItemIcon>
+                    <Settings />
+                  </ListItemIcon>
+                  <ListItemText primary="Change the game settings/difficulty" />
+                </ListItem>
+                <ListItem sx={{ py: 0 }}>
+                  <ListItemIcon>
+                    <FastForward />
+                  </ListItemIcon>
+                  <ListItemText primary="Start a new game with the same settings" />
+                </ListItem>
+              </List>
             </ListItem>
           </List>
         </DialogContentText>

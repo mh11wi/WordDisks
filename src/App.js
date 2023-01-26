@@ -84,6 +84,7 @@ function newGame(wordsList, numberOfWords, lettersPerWord) {
 function App() {
   const [wordsList, setWordsList] = useState(null);
   const [disksText, setDisksText] = useState(null);
+  const [rotatedDisksText, setRotatedDisksText] = useState(null);
   const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 5);
   const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
   const [useUppercase, setUseUppercase] = useState(localStorage.getItem('wd-useUppercase') === 'true');
@@ -96,7 +97,9 @@ function App() {
   
   useEffect(() => {
     if (wordsList) {
-      setDisksText(newGame(wordsList,lettersPerDisk, numberOfDisks));
+      const game = newGame(wordsList,lettersPerDisk, numberOfDisks);
+      setDisksText(game);
+      setRotatedDisksText(game);
       setHasWon(false);
     }
   }, [wordsList, numberOfDisks, lettersPerDisk]);
@@ -111,11 +114,14 @@ function App() {
   }, [hasWon]);
   
   const onRotate = (rotatedDisksText) => {
+    setRotatedDisksText((rotatedDisksText));
     setTimeout(() => setHasWon(isSolved(wordsList, rotatedDisksText)), 500);
   }
   
   const handleClickNewGame = () => {
-    setDisksText(newGame(wordsList,lettersPerDisk, numberOfDisks));
+    const game = newGame(wordsList,lettersPerDisk, numberOfDisks);
+    setDisksText(game);
+    setRotatedDisksText(game);
     setHasWon(false);
   }
   
@@ -134,6 +140,19 @@ function App() {
     localStorage.setItem('wd-useUppercase', val);
   }
   
+  const getColumnWords = () => {
+    const columnWords = [];
+    const letterMatrix = transpose(rotatedDisksText);
+    for (let i=0; i < letterMatrix.length; i++) {
+      const word = letterMatrix[i].join('')
+      columnWords.push({
+        word,
+        definition: `${wordsList.includes(word) ? 'TBD' : 'Not in words list'}`
+      });
+    }
+    return columnWords;
+  }
+  
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -146,8 +165,9 @@ function App() {
           useUppercase={useUppercase}
           setUseUppercase={handleChangeUseUppercase}
           hasWon={hasWon}
+          getColumnWords={getColumnWords}
         />
-        <Box role="main" className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`} sx={{ margin: "auto", height: "calc(100% - 3rem)" }}>
+        <Box role="main" className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
           <ReactDisks 
             disksText={disksText}
             theme={theme.palette.primary}

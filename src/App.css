@@ -7,6 +7,8 @@ html, body, #root, .App {
 }
 
 .Game {
+  margin: auto;
+  height: calc(100% - 3rem);
   width: 100%;
 }
 
@@ -19,6 +21,13 @@ html, body, #root, .App {
 @media (orientation: portrait) and (min-width: 600px) {
   .Game {
     width: 80%;
+  }
+}
+
+@media (orientation: landscape) {
+  .Game {
+    padding: 1rem 0;
+    height: calc(100% - 5rem);
   }
 }
 
