@@ -27,7 +27,7 @@ const steps = [
   {
     icon: ( <Lightbulb /> ),
     primary: 'Pro Tip',
-    secondary: 'Look for an uncommon letter as a starting point. Focus on this column and try to find other letters in adjacent disks that could work with it. For example, the letter U typically comes after the uncommon letter Q.'
+    secondary: 'Look for an uncommon letter as a starting point. Focus on this column and try to find other letters in adjacent disks that could work with it. For example, the letter Q is typically followed by the letter U.'
   },
   {
     icon: ( <Quiz /> ),
@@ -41,12 +41,12 @@ const steps = [
   {
     icon: ( <Lightbulb /> ),
     primary: 'Pro Tip',
-    secondary: 'What are common prefixes and suffixes you know? Look for these letter patterns in the first or last few disks, and try to group them in one column. For example, if the last disk contains the letter G it is possible that its target word ends in ING.'
+    secondary: 'What are common prefixes and suffixes you know? Look for these letter patterns in the first or last few disks, and try to group them in one column. For example, if the last disk contains the letter G it is possible that the target word ends in ING.'
   },
   {
     icon: ( <EmojiEvents /> ),
     primary: 'Keep Practicing',
-    secondary: 'This game is a great way to test your vocbulary and excerise your brain! Practice at your own pace, or if you are up for a challenge, try increasing the number of disks or letters per disk.'
+    secondary: 'This game is a great way to test your vocabulary and exercise your brain! Practice at your own pace, or if you are up for a challenge, try increasing the number of disks or letters per disk.'
   }
 ];
 
