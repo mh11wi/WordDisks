@@ -14,6 +14,7 @@ import {
   TableHead, 
   TableRow 
 } from '@mui/material';
+import WordDetails from './WordDetails';
 
 
 const WordsDialog = (props) => {
@@ -46,13 +47,16 @@ const WordsDialog = (props) => {
                       key={index}
                       sx={{
                         '&:last-child td, &:last-child th': { border: 0 },
-                        backgroundColor: row.details ? theme.palette.success.light : 'inherit',
-                        td: { color: row.details ? theme.palette.success.dark : 'inherit' }
+                        backgroundColor: row.options.inList ? theme.palette.success.light : 'inherit',
+                        td: { color: row.options.inList ? theme.palette.success.dark : 'inherit' }
                       }}
                     >
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{row.word}</TableCell>
-                      <TableCell>{row.details || 'Not in word list.'}</TableCell>
+                      <WordDetails 
+                        index={index + 1}  
+                        word={row.word} 
+                        options={row.options} 
+                        updateDefinitions={props.updateDefinitions}
+                      />
                     </TableRow>
                   )
                 })}

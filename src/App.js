@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, teal } from '@mui/material/colors';
 import Box from '@mui/material/Box';
@@ -94,6 +94,7 @@ function App() {
   const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
   const [useUppercase, setUseUppercase] = useState(localStorage.getItem('wd-useUppercase') === 'true');
   const [hasWon, setHasWon] = useState(false);
+  const [definitions, setDefinitions] = useState(new Map());
   
   useEffect(() => {
     const words = require('random-words');
@@ -145,31 +146,24 @@ function App() {
     localStorage.setItem('wd-useUppercase', val);
   }
   
-  const getColumnWords = async () => {
+  const getColumnWords = () => {
     const columnWords = [];
     const letterMatrix = transpose(rotatedDisksText);
     for (let i=0; i < letterMatrix.length; i++) {
       const word = letterMatrix[i].join('');
-      let details;
+      let options;
       if (wordsList.includes(word)) {
-        await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
-        .then(res => res.json())
-        .then(
-          (result) => {
-            details = (
-              <Fragment>
-                <strong>({result[0].meanings[0].partOfSpeech})</strong> {result[0].meanings[0].definitions[0].definition}
-              </Fragment>
-            );
-          },
-          (error) => {
-            details = 'In word list, but a definition could not be loaded at this time.';
-          }
-        );
+        options = { inList: true, definition: definitions.get(word) };
+      } else {
+        options = { inList: false }
       }
-      columnWords.push({ word, details });
+      columnWords.push({ word, options });
     }
     return columnWords;
+  }
+  
+  const updateDefinitions = (k, v) => {
+    setDefinitions(definitions.set(k, v));
   }
   
   return (
@@ -185,6 +179,7 @@ function App() {
           setUseUppercase={handleChangeUseUppercase}
           hasWon={hasWon}
           getColumnWords={getColumnWords}
+          updateDefinitions={updateDefinitions}
         />
         <Box role="main" className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
           <ReactDisks 

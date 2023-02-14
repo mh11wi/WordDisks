@@ -44,8 +44,8 @@ const MenuBar = (props) => {
     setSettingsOpen(false);
   }
   
-  const handleClickDictionary = async () => {
-    setColumnWords(await props.getColumnWords());
+  const handleClickDictionary = () => {
+    setColumnWords(props.getColumnWords());
     setDictionaryOpen(true);
   }
   
@@ -79,6 +79,7 @@ const MenuBar = (props) => {
           open={dictionaryOpen}
           onClose={handleCloseDictionary}
           data={columnWords}
+          updateDefinitions={props.updateDefinitions}
         />
         
         <Typography variant="h5" component="h1" align="center" sx={{ fontWeight: 500, flexGrow: 1 }}>
