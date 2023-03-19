@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, teal } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import party from "party-js";
+import AdSense from 'react-adsense';
 import ReactDisks from 'react-disks';
 import MenuBar from './components/MenuBar';
 import '@fontsource/roboto/300.css';
@@ -181,14 +182,40 @@ function App() {
           getColumnWords={getColumnWords}
           updateDefinitions={updateDefinitions}
         />
-        <Box role="main" className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
-          <ReactDisks 
-            disksText={disksText}
-            theme={theme.palette.primary}
-            onRotate={onRotate}
-            disabled={hasWon}
+        <Box role="main" className="Main">
+          <AdSense.Google
+            className="vertical-ad-left"
+            client="ca-pub-9808989635264198"
+            slot="9091776362"
+            style={{ backgroundColor: '#f2f2f2'}}
+            format=""
+            responsive="true"
+          />
+          <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
+            <ReactDisks 
+              disksText={disksText}
+              theme={theme.palette.primary}
+              onRotate={onRotate}
+              disabled={hasWon}
+            />
+          </Box>
+          <AdSense.Google
+            className="vertical-ad-right"
+            client="ca-pub-9808989635264198"
+            slot="6465613026"
+            style={{ backgroundColor: '#f2f2f2'}}
+            format=""
+            responsive="true"
           />
         </Box>
+        <AdSense.Google
+          className="horizontal-ad"
+          client="ca-pub-9808989635264198"
+          slot="2074941876"
+          style={{ backgroundColor: '#f2f2f2', width: '100%', height: '90px' }}
+          format=""
+          responsive="true"
+        />
       </ThemeProvider>
     </div>
   );

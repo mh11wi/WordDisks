@@ -1,4 +1,4 @@
-html, body, #root, .App {
+html, body, #root, .App, .Game {
   height: 100%;
 }
 
@@ -6,28 +6,77 @@ html, body, #root, .App {
   overflow: hidden;
 }
 
-.Game {
+.Main {
   margin: auto;
-  height: calc(100% - 3rem);
+  height: calc(100% - 3rem - 90px);
   width: 100%;
 }
 
+.horizontal-ad {
+  display: block;
+}
+
+.vertical-ad-left, .vertical-ad-right {
+  display: none;
+} 
+
 @media (orientation: portrait) and (max-width: 600px) {
-  .Game {
+  .Main {
     width: 95%;
   }
 }
 
 @media (orientation: portrait) and (min-width: 600px) {
-  .Game {
-    width: 80%;
+  .Main {
+    width: 70%;
   }
 }
 
 @media (orientation: landscape) {
+  .Main {
+    height: calc(100% - 3rem);
+    display: grid;
+  }
+  
+  .horizontal-ad {
+    display: none;
+  }
+  
+  .vertical-ad-left, .vertical-ad-right {
+    display: block;
+  } 
+}
+
+@media (orientation: landscape) and (max-width: 1200px) and (max-height: 600px) {
+  .Main {
+    grid-template: 100% / 20% 60% 20%;
+  }
+  
+  .Game {
+    padding: 0.5rem 0;
+    height: calc(100% - 1rem);
+  }
+}
+
+@media (orientation: landscape) and (max-width: 1200px) and (min-height: 600px) {
+  .Main {
+    grid-template: 100% / 17.5% 65% 17.5%;
+  }
+  
+  .Game {
+    padding: 4rem 0;
+    height: calc(100% - 8rem);
+  }
+}
+
+@media (orientation: landscape) and (min-width: 1200px) {
+  .Main {
+    grid-template: 100% / 20% 60% 20%;
+  }
+  
   .Game {
     padding: 1rem 0;
-    height: calc(100% - 5rem);
+    height: calc(100% - 2rem);
   }
 }
 
