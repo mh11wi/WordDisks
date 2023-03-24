@@ -6,6 +6,7 @@ import party from "party-js";
 import AdSense from 'react-adsense';
 import ReactDisks from 'react-disks';
 import MenuBar from './components/MenuBar';
+import useWindowOrientation from './hooks/useWindowOrientation';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -103,6 +104,7 @@ function App() {
   const [useUppercase, setUseUppercase] = useState(localStorage.getItem('wd-useUppercase') === 'true');
   const [hasWon, setHasWon] = useState(false);
   const [definitions, setDefinitions] = useState(new Map());
+  const {orientation} = useWindowOrientation();
   
   useEffect(() => {
     const words = require('random-words');
@@ -190,15 +192,17 @@ function App() {
           updateDefinitions={updateDefinitions}
         />
         <Box role="main" className="Main">
-          <Box className="vertical-ad-left">
-          <AdSense.Google
-            client="ca-pub-9808989635264198"
-            slot="9091776362"
-            style={adStyle}
-            format=""
-            responsive="true"
-          />
-          </Box>
+          {orientation === 'landscape' && 
+            <Box className="vertical-ad-left">
+              <AdSense.Google
+                client="ca-pub-9808989635264198"
+                slot="9091776362"
+                style={adStyle}
+                format=""
+                responsive="true"
+              />
+            </Box>
+          }
           <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
             <ReactDisks 
               disksText={disksText}
@@ -207,25 +211,29 @@ function App() {
               disabled={hasWon}
             />
           </Box>
-          <Box className="vertical-ad-right">
+          {orientation === 'landscape' && 
+            <Box className="vertical-ad-right">
+              <AdSense.Google
+                client="ca-pub-9808989635264198"
+                slot="6465613026"
+                style={adStyle}
+                format=""
+                responsive="true"
+              />
+            </Box>
+          }
+        </Box>
+        {orientation === 'portrait' && 
+          <Box className="horizontal-ad">
             <AdSense.Google
               client="ca-pub-9808989635264198"
-              slot="6465613026"
+              slot="2074941876"
               style={adStyle}
               format=""
               responsive="true"
             />
           </Box>
-        </Box>
-        <Box className="horizontal-ad">
-          <AdSense.Google
-            client="ca-pub-9808989635264198"
-            slot="2074941876"
-            style={adStyle}
-            format=""
-            responsive="true"
-          />
-        </Box>
+        }
       </ThemeProvider>
     </div>
   );
