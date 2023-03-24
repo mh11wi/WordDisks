@@ -179,30 +179,30 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <MenuBar 
-          handleClickNewGame={handleClickNewGame}
-          numberOfDisks={numberOfDisks}
-          setNumberOfDisks={handleChangeNumberOfDisks}
-          lettersPerDisk={lettersPerDisk}
-          setLettersPerDisk={handleChangeLettersPerDisk}
-          useUppercase={useUppercase}
-          setUseUppercase={handleChangeUseUppercase}
-          hasWon={hasWon}
-          getColumnWords={getColumnWords}
-          updateDefinitions={updateDefinitions}
-        />
+        {orientation === 'landscape' && 
+          <Box className="vertical-ad-left">
+            <AdSense.Google
+              client="ca-pub-9808989635264198"
+              slot="9091776362"
+              style={adStyle}
+              format=""
+              responsive="true"
+            />
+          </Box>
+        }
         <Box role="main" className="Main">
-          {orientation === 'landscape' && 
-            <Box className="vertical-ad-left">
-              <AdSense.Google
-                client="ca-pub-9808989635264198"
-                slot="9091776362"
-                style={adStyle}
-                format=""
-                responsive="true"
-              />
-            </Box>
-          }
+          <MenuBar 
+            handleClickNewGame={handleClickNewGame}
+            numberOfDisks={numberOfDisks}
+            setNumberOfDisks={handleChangeNumberOfDisks}
+            lettersPerDisk={lettersPerDisk}
+            setLettersPerDisk={handleChangeLettersPerDisk}
+            useUppercase={useUppercase}
+            setUseUppercase={handleChangeUseUppercase}
+            hasWon={hasWon}
+            getColumnWords={getColumnWords}
+            updateDefinitions={updateDefinitions}
+          />
           <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
             <ReactDisks 
               disksText={disksText}
@@ -211,18 +211,18 @@ function App() {
               disabled={hasWon}
             />
           </Box>
-          {orientation === 'landscape' && 
-            <Box className="vertical-ad-right">
-              <AdSense.Google
-                client="ca-pub-9808989635264198"
-                slot="6465613026"
-                style={adStyle}
-                format=""
-                responsive="true"
-              />
-            </Box>
-          }
         </Box>
+        {orientation === 'landscape' && 
+          <Box className="vertical-ad-right">
+            <AdSense.Google
+              client="ca-pub-9808989635264198"
+              slot="6465613026"
+              style={adStyle}
+              format=""
+              responsive="true"
+            />
+          </Box>
+        }
         {orientation === 'portrait' && 
           <Box className="horizontal-ad">
             <AdSense.Google
