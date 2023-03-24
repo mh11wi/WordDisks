@@ -27,6 +27,13 @@ const theme = createTheme({
   },
 });
 
+const adStyle = {
+  display: 'block', 
+  backgroundColor: '#f2f2f2', 
+  width: '100%', 
+  height: '100%'
+};
+
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
@@ -183,14 +190,15 @@ function App() {
           updateDefinitions={updateDefinitions}
         />
         <Box role="main" className="Main">
+          <Box className="vertical-ad-left">
           <AdSense.Google
-            className="vertical-ad-left"
             client="ca-pub-9808989635264198"
             slot="9091776362"
-            style={{ backgroundColor: '#f2f2f2'}}
+            style={adStyle}
             format=""
             responsive="true"
           />
+          </Box>
           <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
             <ReactDisks 
               disksText={disksText}
@@ -199,23 +207,25 @@ function App() {
               disabled={hasWon}
             />
           </Box>
+          <Box className="vertical-ad-right">
+            <AdSense.Google
+              client="ca-pub-9808989635264198"
+              slot="6465613026"
+              style={adStyle}
+              format=""
+              responsive="true"
+            />
+          </Box>
+        </Box>
+        <Box className="horizontal-ad">
           <AdSense.Google
-            className="vertical-ad-right"
             client="ca-pub-9808989635264198"
-            slot="6465613026"
-            style={{ backgroundColor: '#f2f2f2'}}
+            slot="2074941876"
+            style={adStyle}
             format=""
             responsive="true"
           />
         </Box>
-        <AdSense.Google
-          className="horizontal-ad"
-          client="ca-pub-9808989635264198"
-          slot="2074941876"
-          style={{ backgroundColor: '#f2f2f2', width: '100%', height: '90px' }}
-          format=""
-          responsive="true"
-        />
       </ThemeProvider>
     </div>
   );
