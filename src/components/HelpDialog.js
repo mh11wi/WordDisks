@@ -90,7 +90,7 @@ const HelpDialog = (props) => {
       </DialogContent>
       <DialogActions>
         <DialogContentText sx={{ ml: 1, flexGrow: 1 }}>
-          Like Word Disks? Try <Link href="https://mh11wi.github.io/SumDisks/" target="_blank">Sum Disks</Link>!
+          <Link href="https://mh11wi.github.io/privacy-policy.html">Terms & Privacy Policy</Link>
         </DialogContentText>
         <Button onClick={props.onClose}>Close</Button>
       </DialogActions>
