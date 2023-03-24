@@ -29,10 +29,11 @@ const theme = createTheme({
 });
 
 const adStyle = {
-  display: 'block', 
-  backgroundColor: '#f2f2f2', 
-  width: '100%', 
-  height: '100%'
+  display: 'block',
+  backgroundColor: 'red',
+  width: 'calc(100% - 1rem)',
+  height: 'calc(100% - 1rem)',
+  margin: '0.5rem'
 };
 
 function getRandomInt(max) {
