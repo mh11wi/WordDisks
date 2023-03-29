@@ -104,7 +104,7 @@ function App() {
   const [useUppercase, setUseUppercase] = useState(localStorage.getItem('wd-useUppercase') === 'true');
   const [hasWon, setHasWon] = useState(false);
   const [definitions, setDefinitions] = useState(new Map());
-  const {orientation} = useWindowOrientation();
+  const { orientation, resizing } = useWindowOrientation();
   
   useEffect(() => {
     const words = require('random-words');
@@ -179,7 +179,7 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        {orientation === 'landscape' && 
+        {orientation === 'landscape'&& !resizing && 
           <Box className="vertical-ad-left">
             <AdSense.Google
               client="ca-pub-9808989635264198"
@@ -212,7 +212,7 @@ function App() {
             />
           </Box>
         </Box>
-        {orientation === 'landscape' && 
+        {orientation === 'landscape' && !resizing && 
           <Box className="vertical-ad-right">
             <AdSense.Google
               client="ca-pub-9808989635264198"
@@ -223,7 +223,7 @@ function App() {
             />
           </Box>
         }
-        {orientation === 'portrait' && 
+        {orientation === 'portrait' && !resizing && 
           <Box className="horizontal-ad">
             <AdSense.Google
               client="ca-pub-9808989635264198"
