@@ -35,6 +35,16 @@ const adStyle = {
   margin: '0.5rem'
 };
 
+function debounce(func, timeout) {
+  let timer;
+  return function(event) {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(func, timeout, event);
+  };
+}
+
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
@@ -130,8 +140,8 @@ function App() {
   }, [hasWon]);
   
   const onRotate = (rotatedDisksText) => {
-    setRotatedDisksText((rotatedDisksText));
-    setTimeout(() => setHasWon(isSolved(wordsList, rotatedDisksText)), 500);
+    setRotatedDisksText(rotatedDisksText);
+    setHasWon(isSolved(wordsList, rotatedDisksText));
   }
   
   const handleClickNewGame = () => {
@@ -212,7 +222,7 @@ function App() {
             <ReactDisks 
               disksText={disksText}
               theme={theme.palette.primary}
-              onRotate={onRotate}
+              onRotate={debounce(onRotate, 500)}
               disabled={hasWon}
             />
           </Box>
