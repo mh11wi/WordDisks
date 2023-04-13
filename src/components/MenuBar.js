@@ -1,24 +1,29 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
-import { FastForward, Help, Home, Lightbulb, MenuBook, Settings } from '@mui/icons-material';
+import { Help, Home, Lightbulb, MenuBook, Settings, Share } from '@mui/icons-material';
 import HelpDialog from './HelpDialog';
 import SettingsDialog from './SettingsDialog';
 import WordsDialog from './WordsDialog';
 import TipsDialog from './TipsDialog';
+import ShareDialog from './ShareDialog';
+
+const shareData = {
+  title: "Word Disks",
+  text: "Like word games? Try:",
+  url: "https://mh11wi.github.io/WordDisks/",
+};
+
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
 
 const MenuBar = (props) => {
-  const actionRef = createRef();
   const [helpOpen, setHelpOpen] = useState(true);
   const [tipsOpen, setTipsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [dictionaryOpen, setDictionaryOpen] = useState(false);
   const [columnWords, setColumnWords] = useState(null);
-  
-  useEffect(() => {
-    if (props.hasWon) {
-      actionRef.current.focusVisible();
-    }
-  }, [actionRef, props.hasWon]);
+  const [shareOpen, setShareOpen] = useState(false);
   
   const handleClickHelp = () => {
     setHelpOpen(true);
@@ -51,6 +56,24 @@ const MenuBar = (props) => {
   
   const handleCloseDictionary = () => {
     setDictionaryOpen(false);
+  }
+  
+  const handleClickShare = async () => {
+    if (!isMobile()) {
+      setShareOpen(true);
+    } else {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setShareOpen(true);
+        }
+      }
+    }
+  }
+  
+  const handleCloseShare = () => {
+    setShareOpen(false);
   }
   
   return (
@@ -100,9 +123,14 @@ const MenuBar = (props) => {
           setUseUppercase={props.setUseUppercase}
         />
         
-        <IconButton action={actionRef} aria-label="New Game" onClick={props.handleClickNewGame} color="inherit">
-          <FastForward />
+        <IconButton aria-label="Share" onClick={handleClickShare} color="inherit">
+          <Share />
         </IconButton>
+        <ShareDialog
+          open={shareOpen}
+          onClose={handleCloseShare}
+          data={shareData}
+        />
         
         <IconButton aria-label="Home" href="https://mh11wi.github.io" color="inherit">
           <Home />

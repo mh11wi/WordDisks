@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, teal } from '@mui/material/colors';
 import Box from '@mui/material/Box';
-import party from "party-js";
+import party from 'party-js';
 import AdSense from 'react-adsense';
 import ReactDisks from 'react-disks';
 import MenuBar from './components/MenuBar';
+import NewGameButton from './components/NewGameButton';
 import useWindowOrientation from './hooks/useWindowOrientation';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -21,7 +22,7 @@ const theme = createTheme({
       dark: teal[800]
     },
     success: {
-      light: green[100],
+      light: green[50],
       main: green[500],
       dark: green[900]
     },
@@ -214,7 +215,6 @@ function App() {
             setLettersPerDisk={handleChangeLettersPerDisk}
             useUppercase={useUppercase}
             setUseUppercase={handleChangeUseUppercase}
-            hasWon={hasWon}
             getColumnWords={getColumnWords}
             updateDefinitions={updateDefinitions}
           />
@@ -225,6 +225,7 @@ function App() {
               onRotate={debounce(onRotate, 500)}
               disabled={hasWon}
             />
+            <NewGameButton handleClick={handleClickNewGame} doTransition={!resizing} doPulsate={hasWon} />
           </Box>
         </Box>
         {orientation === 'landscape' && !resizing && 
