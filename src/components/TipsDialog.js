@@ -10,6 +10,7 @@ import {
   List,
   ListItem,
   ListItemAvatar,
+  ListItemIcon,
   ListItemText,
   Link,
   MobileStepper,
@@ -17,10 +18,15 @@ import {
 } from '@mui/material';
 import {
   EmojiEvents,
+  Facebook,
   KeyboardArrowLeft, 
   KeyboardArrowRight, 
   Lightbulb,
-  Quiz
+  ThumbUpAlt,
+  Twitter,
+  Quiz,
+  Warning,
+  YouTube
 } from '@mui/icons-material';
 
 const steps = [
@@ -39,14 +45,81 @@ const steps = [
     )
   },
   {
+    icon: ( <Warning /> ),
+    primary: 'Important Note',
+    secondary: 'The word list consists of common English words, but it is not exhaustive. For words with multiple spellings, the American version is used (e.g. COLOR instead of COLOUR).'
+  },
+  {
     icon: ( <Lightbulb /> ),
     primary: 'Pro Tip',
-    secondary: 'What are common prefixes and suffixes you know? Look for these letter patterns in the first or last few disks, and try to group them in one column. For example, if the last disk contains the letter G it is possible that the target word ends in ING.'
+    secondary: 'What are common prefixes and suffixes you know? Look for these letter patterns, and try to group them in one column. For example, if the last disk contains the letter G it is possible that the target word ends in ING.'
+  },
+  {
+    icon: ( <Quiz /> ),
+    primary: 'Did You Know?',
+    secondary: (
+      <Fragment>
+        The <Link href="https://opendyslexic.org/" target="_blank">OpenDyslexic</Link> font was chosen to make the disks easier to read, particularly when the letters appear upside down. Each letter has a weighted bottom to help distinguish M and W, for instance.
+      </Fragment>
+    )
   },
   {
     icon: ( <EmojiEvents /> ),
     primary: 'Keep Practicing',
-    secondary: 'This game is a great way to test your vocabulary and exercise your brain! Practice at your own pace, or if you are up for a challenge, try increasing the number of disks or letters per disk.'
+    secondary: 'This game is a great way to test your vocabulary and exercise your brain! Practice at your own pace, or if you are up for a challenge, try increasing the number of disks or number of words.'
+  },
+  {
+    icon: ( <ThumbUpAlt /> ),
+    primary: "Let's Get Social!",
+    secondary: (
+      <Fragment>
+        Follow "Word Disks" on social media for even more fun, and to receive updates about the game:
+        <List sx={{ px: 2, py: 0 }}>
+          <ListItem sx={{ py: 0 }}>
+            <ListItemIcon sx={{ minWidth: '2rem'}}>
+              <YouTube />
+            </ListItemIcon>
+            <ListItemText>
+              <Link 
+                href="https://youtube.com/@worddisks" 
+                target="_blank" 
+                sx={{ fontSize: '0.9em'}}
+              >
+                youtube.com/@worddisks
+              </Link>
+            </ListItemText>
+          </ListItem>
+          <ListItem sx={{ py: 0 }}>
+            <ListItemIcon sx={{ minWidth: '2rem'}}>
+              <Facebook />
+            </ListItemIcon>
+            <ListItemText sx={{ my: 0 }}>
+              <Link 
+                href="https://facebook.com/worddisks" 
+                target="_blank"
+                sx={{ fontSize: '0.9em'}}
+              >
+                facebook.com/worddisks
+              </Link>
+            </ListItemText>
+          </ListItem>
+          <ListItem sx={{ py: 0 }}>
+            <ListItemIcon sx={{ minWidth: '2rem'}}>
+              <Twitter />
+            </ListItemIcon>
+            <ListItemText>
+              <Link 
+                href="https://twitter.com/worddisks" 
+                target="_blank"
+                sx={{ fontSize: '0.9em'}}
+              >
+                twitter.com/worddisks
+              </Link>
+            </ListItemText>
+          </ListItem>
+        </List>
+      </Fragment>
+    )
   }
 ];
 
@@ -82,9 +155,10 @@ const TipsDialog = (props) => {
                   {steps[activeStep].icon}
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText 
+              <ListItemText
                 primary={steps[activeStep].primary} 
                 secondary={steps[activeStep].secondary}
+                secondaryTypographyProps={{ component: "div" }}
               />
             </ListItem>
           </List>
