@@ -119,6 +119,21 @@ function App() {
   
   useEffect(() => {
     const words = require('random-words');
+    words.wordList.splice(292, 1, 'turkey');
+    words.wordList.splice(323, 1, 'giraffe');
+    words.wordList.splice(591, 1, 'fan');
+    words.wordList.splice(747, 1, 'gem');
+    words.wordList.splice(885, 1, 'aunt');
+    words.wordList.splice(992, 1, 'turtle');
+    words.wordList.splice(1351, 1, 'penguin');
+    words.wordList.splice(1458, 1, 'peacock');
+    words.wordList.splice(1521, 1, 'sloth');
+    words.wordList.splice(1703, 1, 'goat');
+    words.wordList.splice(1720, 1, 'code');
+    words.wordList.splice(1734, 1, 'bun');
+    words.wordList.splice(1783, 1, 'tiger');
+    words.wordList.splice(1848, 1, 'mug');
+    words.wordList.splice(1951, 1, 'llama');
     setWordsList(words.wordList);
   }, []);
   
