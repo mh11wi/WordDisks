@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, teal } from '@mui/material/colors';
 import Box from '@mui/material/Box';
@@ -107,6 +107,7 @@ function newGame(wordsList, numberOfWords, lettersPerWord) {
 }
 
 function App() {
+  const loadingRef = useRef(0);
   const [wordsList, setWordsList] = useState(null);
   const [disksText, setDisksText] = useState(null);
   const [rotatedDisksText, setRotatedDisksText] = useState(null);
@@ -139,7 +140,56 @@ function App() {
   
   useEffect(() => {
     if (wordsList) {
-      const game = newGame(wordsList,lettersPerDisk, numberOfDisks);
+      let game;
+      if (loadingRef.current < 2) {
+        const params = new URLSearchParams(window.location.search);
+        const urlDisks = params.get('disks');
+        
+        try {
+          if (!urlDisks) {
+            throw new Error('No game provided.');
+          }
+          
+          const disks = urlDisks.split('_');
+          if (disks.length < 3 || disks.length > 7) {
+            throw new Error('Invalid number of disks.');
+          }
+          
+          const numberOfColumns = disks[0].length;
+          if (numberOfColumns !== 2 &&  numberOfColumns !== 4 && numberOfColumns !== 6 && numberOfColumns !== 8) {
+            throw new Error('Invalid number of words.');
+          }
+          
+          game = disks.map((disk) => {
+            const columns = disk.toLowerCase().split('');
+            if (columns.length !== numberOfColumns) {
+              throw new Error('Inconsistent number of words.');
+            }
+            
+            return columns.map((column) => {
+              if (!column.match(/[a-z]/i)) {
+                throw new Error('Invalid disk contents.');
+              }
+              return column;
+            });
+          });
+          
+          setNumberOfDisks(game.length);
+          setLettersPerDisk(game[0].length);
+        } catch (error) {
+          if (loadingRef.current === 0) {
+            console.log(`${error.message} Generating random game...`);
+          }
+        } finally {
+          loadingRef.current++;
+        }
+      }
+      
+      if (!game) {
+        game = newGame(wordsList, lettersPerDisk, numberOfDisks);
+      }
+      
+      
       setDisksText(game);
       setRotatedDisksText(game);
       setHasWon(false);
@@ -166,7 +216,7 @@ function App() {
       name: 'new-game',
     });
     
-    const game = newGame(wordsList,lettersPerDisk, numberOfDisks);
+    const game = newGame(wordsList, lettersPerDisk, numberOfDisks);
     setDisksText(game);
     setRotatedDisksText(game);
     setHasWon(false);
@@ -207,6 +257,15 @@ function App() {
     setDefinitions(definitions.set(k, v));
   }
   
+    const getQueryString = () => {
+    if (!disksText) {
+      return '';
+    }
+    
+    const disks = disksText.map((disk) => disk.join('')).join('_');
+    return `?disks=${disks}`;
+  }
+  
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -232,6 +291,7 @@ function App() {
             setUseUppercase={handleChangeUseUppercase}
             getColumnWords={getColumnWords}
             updateDefinitions={updateDefinitions}
+            getQueryString={getQueryString}
           />
           <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
             <ReactDisks 

@@ -7,12 +7,6 @@ import WordsDialog from './WordsDialog';
 import TipsDialog from './TipsDialog';
 import ShareDialog from './ShareDialog';
 
-const shareData = {
-  title: "Word Disks",
-  text: "Like word games? Try:",
-  url: "https://mh11wi.github.io/WordDisks/",
-};
-
 function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
@@ -24,6 +18,12 @@ const MenuBar = (props) => {
   const [dictionaryOpen, setDictionaryOpen] = useState(false);
   const [columnWords, setColumnWords] = useState(null);
   const [shareOpen, setShareOpen] = useState(false);
+  
+  const shareData = {
+    title: "Word Disks",
+    text: props.getQueryString() ? "Can you solve this puzzle?" : "Like word games? Try:",
+    url: "https://mh11wi.github.io/WordDisks" + props.getQueryString()
+  };
   
   const handleClickHelp = () => {
     setHelpOpen(true);
