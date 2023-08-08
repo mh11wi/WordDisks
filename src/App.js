@@ -111,7 +111,7 @@ function App() {
   const [wordsList, setWordsList] = useState(null);
   const [disksText, setDisksText] = useState(null);
   const [rotatedDisksText, setRotatedDisksText] = useState(null);
-  const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 5);
+  const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 3);
   const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
   const [useUppercase, setUseUppercase] = useState(localStorage.getItem('wd-useUppercase') === 'true');
   const [hasWon, setHasWon] = useState(false);
