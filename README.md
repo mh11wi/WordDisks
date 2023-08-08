@@ -14,3 +14,5 @@ The following settings are configurable in the game:
 - number of disks
 
 - whether letters should be uppercase or lowercase
+
+- on mobile touch devices, whether disks can be rotated via swipe gestures instead

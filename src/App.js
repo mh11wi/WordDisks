@@ -106,6 +106,10 @@ function newGame(wordsList, numberOfWords, lettersPerWord) {
   return disksText;
 }
 
+function isTouchDevice() {
+  return ('ontouchstart' in window)
+}
+
 function App() {
   const loadingRef = useRef(0);
   const [wordsList, setWordsList] = useState(null);
@@ -114,6 +118,9 @@ function App() {
   const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 3);
   const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
   const [useUppercase, setUseUppercase] = useState(localStorage.getItem('wd-useUppercase') === 'true');
+  const [useSwipeMode, setUseSwipeMode] = useState(
+    localStorage.getItem('wd-useSwipeMode') ? localStorage.getItem('wd-useSwipeMode') === 'true' : isTouchDevice()
+  );
   const [hasWon, setHasWon] = useState(false);
   const [definitions, setDefinitions] = useState(new Map());
   const { orientation, resizing } = useWindowOrientation();
@@ -237,6 +244,11 @@ function App() {
     localStorage.setItem('wd-useUppercase', val);
   }
   
+  const handleChangeUseSwipeMode = (val) => {
+    setUseSwipeMode(val);
+    localStorage.setItem('wd-useSwipeMode', val);
+  }
+  
   const getColumnWords = () => {
     const columnWords = [];
     const letterMatrix = transpose(rotatedDisksText);
@@ -289,6 +301,8 @@ function App() {
             setLettersPerDisk={handleChangeLettersPerDisk}
             useUppercase={useUppercase}
             setUseUppercase={handleChangeUseUppercase}
+            useSwipeMode={useSwipeMode}
+            setUseSwipeMode={handleChangeUseSwipeMode}
             getColumnWords={getColumnWords}
             updateDefinitions={updateDefinitions}
             getQueryString={getQueryString}
@@ -299,6 +313,7 @@ function App() {
               theme={theme.palette.primary}
               onRotate={debounce(onRotate, 500)}
               disabled={hasWon}
+              swipeMode={useSwipeMode}
             />
             <NewGameButton handleClick={handleClickNewGame} doTransition={!resizing} doPulsate={hasWon} />
           </Box>

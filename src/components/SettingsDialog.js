@@ -26,6 +26,10 @@ const disksMarks = [
   { value: 7, label: '7' },
 ];
 
+function isTouchDevice() {
+  return ('ontouchstart' in window)
+}
+
 const SettingsDialog = (props) => {
   const onWordsChange = (event, newValue) => {
     props.setLettersPerDisk(newValue);
@@ -37,6 +41,10 @@ const SettingsDialog = (props) => {
   
   const onUppercaseChange = (event, newValue) => {
     props.setUseUppercase(newValue);
+  }
+  
+  const onSwipeModeChange = (event, newValue) => {
+    props.setUseSwipeMode(newValue);
   }
   
   return (
@@ -88,6 +96,18 @@ const SettingsDialog = (props) => {
             onChange={onUppercaseChange}
           />
         </DialogContentText>
+        {isTouchDevice() && 
+          <DialogContentText component="div" sx={{ pt: 2 }}>
+            <Typography id="swipe-mode-switch">
+              Swipe to rotate
+            </Typography>
+            <Switch
+              inputProps={{ 'aria-labelledby': 'swipe-mode-switch' }}
+              checked={props.useSwipeMode}
+              onChange={onSwipeModeChange}
+            />
+          </DialogContentText>
+        }
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose}>Close</Button>

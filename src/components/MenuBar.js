@@ -85,6 +85,7 @@ const MenuBar = (props) => {
         <HelpDialog
           open={helpOpen}
           onClose={handleCloseHelp}
+          useSwipeMode={props.useSwipeMode}
         />
         
         <IconButton aria-label="Tips" onClick={handleClickTips} color="inherit">
@@ -121,6 +122,8 @@ const MenuBar = (props) => {
           setLettersPerDisk={props.setLettersPerDisk}
           useUppercase={props.useUppercase}
           setUseUppercase={props.setUseUppercase}
+          useSwipeMode={props.useSwipeMode}
+          setUseSwipeMode={props.setUseSwipeMode}
         />
         
         <IconButton aria-label="Share" onClick={handleClickShare} color="inherit">
