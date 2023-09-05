@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
-import { Help, Home, Lightbulb, MenuBook, Settings, Share } from '@mui/icons-material';
+import { Help, Menu, MenuBook, Settings } from '@mui/icons-material';
+import MainMenu from './MainMenu';
 import HelpDialog from './HelpDialog';
 import SettingsDialog from './SettingsDialog';
 import WordsDialog from './WordsDialog';
@@ -12,6 +13,7 @@ function isMobile() {
 }
 
 const MenuBar = (props) => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(true);
   const [tipsOpen, setTipsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -24,6 +26,14 @@ const MenuBar = (props) => {
     text: props.getQueryString() ? "Can you solve this puzzle?" : "Like word games? Try:",
     url: "https://mh11wi.github.io/WordDisks" + props.getQueryString()
   };
+  
+  const handleClickMenu = () => {
+    setMenuOpen(true);
+  }
+  
+  const handleCloseMenu = () => {
+    setMenuOpen(false);
+  }
   
   const handleClickHelp = () => {
     setHelpOpen(true);
@@ -79,6 +89,19 @@ const MenuBar = (props) => {
   return (
     <AppBar position="relative">
       <Toolbar variant="dense">
+        <IconButton aria-label="Menu" onClick={handleClickMenu} color="inherit">
+          <Menu />
+        </IconButton>
+        <MainMenu
+          open={menuOpen}
+          onClose={handleCloseMenu}
+          handleClickHelp={handleClickHelp}
+          handleClickTips={handleClickTips}
+          handleClickDictionary={handleClickDictionary}
+          handleClickShare={handleClickShare}
+          handleClickSettings={handleClickSettings}
+        />
+      
         <IconButton aria-label="Help" onClick={handleClickHelp} color="inherit">
           <Help />
         </IconButton>
@@ -88,13 +111,9 @@ const MenuBar = (props) => {
           useSwipeMode={props.useSwipeMode}
         />
         
-        <IconButton aria-label="Tips" onClick={handleClickTips} color="inherit">
-          <Lightbulb />
-        </IconButton>
-        <TipsDialog
-          open={tipsOpen}
-          onClose={handleCloseTips}
-        />
+        <Typography variant="h5" component="h1" align="center" sx={{ fontWeight: 500, flexGrow: 1 }}>
+          Word Disks
+        </Typography>
         
         <IconButton aria-label="Dictionary" onClick={handleClickDictionary} color="inherit">
           <MenuBook />
@@ -105,10 +124,6 @@ const MenuBar = (props) => {
           data={columnWords}
           updateDefinitions={props.updateDefinitions}
         />
-        
-        <Typography variant="h5" component="h1" align="center" sx={{ fontWeight: 500, flexGrow: 1 }}>
-          Word Disks
-        </Typography>
         
         <IconButton aria-label="Settings" onClick={handleClickSettings} color="inherit">
           <Settings />
@@ -126,18 +141,17 @@ const MenuBar = (props) => {
           setUseSwipeMode={props.setUseSwipeMode}
         />
         
-        <IconButton aria-label="Share" onClick={handleClickShare} color="inherit">
-          <Share />
-        </IconButton>
+        {/* Dialogs where icon only in MainMenu: */}
+        <TipsDialog
+          open={tipsOpen}
+          onClose={handleCloseTips}
+        />
+        
         <ShareDialog
           open={shareOpen}
           onClose={handleCloseShare}
           data={shareData}
         />
-        
-        <IconButton aria-label="Home" href="https://mh11wi.github.io" color="inherit">
-          <Home />
-        </IconButton>
       </Toolbar>
     </AppBar>
   );
