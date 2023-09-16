@@ -141,7 +141,7 @@ function App() {
     words.wordList.splice(1734, 1, 'bun');
     words.wordList.splice(1783, 1, 'tiger');
     words.wordList.splice(1848, 1, 'mug');
-    words.wordList.splice(1951, 1, 'llama');
+    words.wordList.splice(1951, 1, 'bed');
     setWordsList(words.wordList);
   }, []);
   
