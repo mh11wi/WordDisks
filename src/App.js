@@ -128,6 +128,8 @@ function App() {
   useEffect(() => {
     const words = require('random-words');
     words.wordList.splice(6, 1, 'rebel');
+    words.wordList.splice(7, 1, 'treat');
+    words.wordList.splice(9, 1, 'forever');
     words.wordList.splice(292, 1, 'turkey');
     words.wordList.splice(323, 1, 'giraffe');
     words.wordList.splice(591, 1, 'fan');
