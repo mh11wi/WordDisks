@@ -224,6 +224,12 @@ function App() {
     window.adBreak({
       type: 'next',
       name: 'new-game',
+      beforeAd: () => {
+        document.querySelectorAll('.adsbygoogle[data-slotcar-interstitial="true"], .adsbygoogle[data-slotcar-interstitial="true"] *').forEach(function(el) {
+          el.style.width = "100vw";
+          el.style.height = "100vh";
+        });
+      }
     });
     
     const game = newGame(wordsList, lettersPerDisk, numberOfDisks);
