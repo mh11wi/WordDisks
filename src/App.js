@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { green, teal } from '@mui/material/colors';
+import { green, grey, teal } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import party from 'party-js';
 import AdSense from 'react-adsense';
 import ReactDisks from 'react-disks';
 import MenuBar from './components/MenuBar';
 import NewGameButton from './components/NewGameButton';
+import ConsecutiveSnackbars from './components/ConsecutiveSnackbars';
 import useWindowOrientation from './hooks/useWindowOrientation';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -17,14 +18,19 @@ import './App.css';
 const theme = createTheme({
   palette: {
     primary: {
-      main: teal[500],
       light: teal[100],
+      main: teal[500],
       dark: teal[800]
+    },
+    secondary: {
+      light: grey[50],
+      main: grey[300],
+      dark: grey[700]
     },
     success: {
       light: green[50],
-      main: green[500],
-      dark: green[900]
+      main: green[300],
+      dark: green[700]
     },
   },
 });
@@ -121,8 +127,16 @@ function App() {
   const [useSwipeMode, setUseSwipeMode] = useState(
     localStorage.getItem('wd-useSwipeMode') ? localStorage.getItem('wd-useSwipeMode') === 'true' : isTouchDevice()
   );
+  const [unlimitedStats, setUnlimitedStats] = useState([
+    parseInt(localStorage.getItem('wd-unlimitedStats-3')) || 0,
+    parseInt(localStorage.getItem('wd-unlimitedStats-4')) || 0,
+    parseInt(localStorage.getItem('wd-unlimitedStats-5')) || 0,
+    parseInt(localStorage.getItem('wd-unlimitedStats-6')) || 0,
+    parseInt(localStorage.getItem('wd-unlimitedStats-7')) || 0
+  ]);
   const [hasWon, setHasWon] = useState(false);
   const [definitions, setDefinitions] = useState(new Map());
+  const [snackPack, setSnackPack] = useState([]);
   const { orientation, resizing } = useWindowOrientation();
   
   useEffect(() => {
@@ -216,6 +230,7 @@ function App() {
       party.confetti(element, {
         count: party.variation.range(50, 70),
       });
+      updateUnlimitedStats();
     }
   }, [hasWon]);
   
@@ -265,6 +280,34 @@ function App() {
   const handleChangeUseSwipeMode = (val) => {
     setUseSwipeMode(val);
     localStorage.setItem('wd-useSwipeMode', val);
+  }
+  
+  const updateUnlimitedStats = () => {
+    const newStats = unlimitedStats.slice();
+    const unlimitedWins = newStats.reduce((partialSum, a) => partialSum + a, 0) + 1;
+    const achievementThresholds = [1, 5, 10, 20, 50, 100];
+    
+    const val = ++newStats[numberOfDisks - 3];
+    setUnlimitedStats(newStats);
+    localStorage.setItem('wd-unlimitedStats-' + numberOfDisks, val);
+    
+    if (achievementThresholds.includes(unlimitedWins)) {
+      let message = `Win ${unlimitedWins} game${unlimitedWins == 1 ? '' : 's'}`;
+      if (unlimitedWins == 1) {
+        message += " - Nicely done!";
+      } else if (
+        unlimitedWins == 5 && 
+        localStorage.getItem('wd-numberOfDisks') == null && 
+        localStorage.getItem('wd-lettersPerDisk') == null
+      ) {
+        message += " - Impressive! Care to up the difficulty?";
+      }
+      
+      setSnackPack((prev) => [...prev, { 
+        message: message, 
+        key: new Date().getTime() 
+      }]);
+    }
   }
   
   const getColumnWords = () => {
@@ -324,6 +367,7 @@ function App() {
             getColumnWords={getColumnWords}
             updateDefinitions={updateDefinitions}
             getQueryString={getQueryString}
+            unlimitedStats={unlimitedStats}
           />
           <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
             <ReactDisks 
@@ -334,6 +378,7 @@ function App() {
               swipeMode={useSwipeMode}
             />
             <NewGameButton handleClick={handleClickNewGame} doTransition={!resizing} doPulsate={hasWon} />
+            <ConsecutiveSnackbars snackPack={snackPack} setSnackPack={setSnackPack} />
           </Box>
         </Box>
         {orientation === 'landscape' && !resizing && 
