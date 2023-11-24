@@ -295,12 +295,8 @@ function App() {
       let message = `Win ${unlimitedWins} game${unlimitedWins == 1 ? '' : 's'}`;
       if (unlimitedWins == 1) {
         message += " - Nicely done!";
-      } else if (
-        unlimitedWins == 5 && 
-        localStorage.getItem('wd-numberOfDisks') == null && 
-        localStorage.getItem('wd-lettersPerDisk') == null
-      ) {
-        message += " - Impressive! Care to up the difficulty?";
+      } else if (unlimitedWins == 5 && localStorage.getItem('wd-numberOfDisks') == null) {
+        message += " - Impressive! Why not add another disk?";
       }
       
       setSnackPack((prev) => [...prev, { 
