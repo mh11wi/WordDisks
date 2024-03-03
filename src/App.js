@@ -147,6 +147,7 @@ function App() {
       words.wordList.splice(9, 1, 'forever');
       words.wordList.splice(15, 1, 'and');
       words.wordList.splice(17, 1, 'guy');
+      words.wordList.splice(19, 1, 'swear');
       words.wordList.splice(292, 1, 'turkey');
       words.wordList.splice(323, 1, 'giraffe');
       words.wordList.splice(591, 1, 'fan');
