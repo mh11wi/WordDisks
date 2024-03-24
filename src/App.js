@@ -1,19 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, grey, teal } from '@mui/material/colors';
 import Box from '@mui/material/Box';
-import party from 'party-js';
 import AdSense from 'react-adsense';
-import ReactDisks from 'react-disks';
-import MenuBar from './components/MenuBar';
-import NewGameButton from './components/NewGameButton';
-import ConsecutiveSnackbars from './components/ConsecutiveSnackbars';
-import useWindowOrientation from './hooks/useWindowOrientation';
+import MenuBar from 'components/menu/MenuBar';
+import UnlimitedMode from 'components/game/modes/unlimited/UnlimitedMode';
+import useWindowOrientation from 'hooks/useWindowOrientation';
+import { isTouchDevice } from 'helpers/app';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import './App.css';
+import 'src/App.css';
+
 
 const theme = createTheme({
   palette: {
@@ -42,91 +41,26 @@ const adStyle = {
   margin: '0.5rem'
 };
 
-function debounce(func, timeout) {
-  let timer;
-  return function(event) {
-    if (timer) {
-      clearTimeout(timer);
-    }
-    timer = setTimeout(func, timeout, event);
-  };
-}
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
-}
-
-function generateRandomWords(wordsList, numberOfWords, lettersPerWord) {
-  const words = new Set();
-  while (words.size < numberOfWords) {
-    const word = wordsList[getRandomInt(wordsList.length)];
-    if (word.length === lettersPerWord) {
-      words.add(word);
-    }
-  }
-  return Array.from(words);
-}
-
-function toLetterMatrix(words) {
-  return words.map((word) => word.split(''));
-}
-
-function transpose(matrix) {
-  return matrix[0].map((col, i) => matrix.map(row => row[i]));
-}
-
-function rotate(array) {
-  return array.push(array.shift());
-}
-
-function randomRotate(matrix) {
-  return matrix.map((row) => {
-    const numberOfRotations = getRandomInt(row.length);
-    for (let i=0; i < numberOfRotations; i++) {
-      rotate(row);
-    }
-    return row;
-  });
-}
-
-function toWords(letterMatrix) {
-  return letterMatrix.map((letters) => letters.join(''));
-}
-
-function isSolved(wordsList, answer) {
-  const letterMatrix = transpose(answer);
-  const words = toWords(letterMatrix);
-  return words.every((word) => wordsList.includes(word));
-}
-
-function newGame(wordsList, numberOfWords, lettersPerWord) {
-  const words = generateRandomWords(wordsList, numberOfWords, lettersPerWord);
-  const letterMatrix = toLetterMatrix(words);
-  const disksText = transpose(letterMatrix);
-  randomRotate(disksText);
-  
-  if (isSolved(wordsList, disksText)) {
-    return newGame(wordsList, numberOfWords, lettersPerWord);
-  }
-  
-  return disksText;
-}
-
-function isTouchDevice() {
-  return ('ontouchstart' in window)
-}
+export const GameContext = createContext();
 
 function App() {
   const loadingRef = useRef(0);
+  const { orientation, resizing } = useWindowOrientation();
+  
+  // Game Context State
+  const [gameMode, setGameMode] = useState(null);
   const [wordsList, setWordsList] = useState(null);
   const [disksText, setDisksText] = useState(null);
   const [rotatedDisksText, setRotatedDisksText] = useState(null);
-  const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 3);
-  const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
   const [useUppercase, setUseUppercase] = useState(localStorage.getItem('wd-useUppercase') === 'true');
-  const [useSwipeMode, setUseSwipeMode] = useState(
+  const [useSwipe, setUseSwipe] = useState(
     localStorage.getItem('wd-useSwipeMode') ? localStorage.getItem('wd-useSwipeMode') === 'true' : isTouchDevice()
   );
+  
+  // Unlimited Mode State
+  const [urlGame, setUrlGame] = useState(null);
+  const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 3);
+  const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
   const [unlimitedStats, setUnlimitedStats] = useState([
     parseInt(localStorage.getItem('wd-unlimitedStats-3')) || 0,
     parseInt(localStorage.getItem('wd-unlimitedStats-4')) || 0,
@@ -134,10 +68,6 @@ function App() {
     parseInt(localStorage.getItem('wd-unlimitedStats-6')) || 0,
     parseInt(localStorage.getItem('wd-unlimitedStats-7')) || 0
   ]);
-  const [hasWon, setHasWon] = useState(false);
-  const [definitions, setDefinitions] = useState(new Map());
-  const [snackPack, setSnackPack] = useState([]);
-  const { orientation, resizing } = useWindowOrientation();
   
   useEffect(() => {
     async function fetchWords() {
@@ -179,94 +109,53 @@ function App() {
         const params = new URLSearchParams(window.location.search);
         const urlDisks = params.get('disks');
         
-        try {
-          if (!urlDisks) {
-            throw new Error('No game provided.');
-          }
-          
-          const disks = urlDisks.split('_');
-          if (disks.length < 3 || disks.length > 7) {
-            throw new Error('Invalid number of disks.');
-          }
-          
-          const numberOfColumns = disks[0].length;
-          if (numberOfColumns !== 2 &&  numberOfColumns !== 4 && numberOfColumns !== 6 && numberOfColumns !== 8) {
-            throw new Error('Invalid number of words.');
-          }
-          
-          game = disks.map((disk) => {
-            const columns = disk.toLowerCase().split('');
-            if (columns.length !== numberOfColumns) {
-              throw new Error('Inconsistent number of words.');
+        if (urlDisks) {
+          setGameMode('unlimited');
+        } else {
+          // TO-DO: add more cases for different game modes
+          setGameMode('unlimited');
+        }  
+        
+        if (urlDisks) {
+          try {
+            const disks = urlDisks.split('_');
+            if (disks.length < 3 || disks.length > 7) {
+              throw new Error('Invalid number of disks.');
             }
             
-            return columns.map((column) => {
-              if (!column.match(/[a-z]/i)) {
-                throw new Error('Invalid disk contents.');
+            const numberOfColumns = disks[0].length;
+            if (numberOfColumns !== 2 &&  numberOfColumns !== 4 && numberOfColumns !== 6 && numberOfColumns !== 8) {
+              throw new Error('Invalid number of words.');
+            }
+            
+            game = disks.map((disk) => {
+              const columns = disk.toLowerCase().split('');
+              if (columns.length !== numberOfColumns) {
+                throw new Error('Inconsistent number of words.');
               }
-              return column;
+              
+              return columns.map((column) => {
+                if (!column.match(/[a-z]/i)) {
+                  throw new Error('Invalid disk contents.');
+                }
+                return column;
+              });
             });
-          });
-          
-          setNumberOfDisks(game.length);
-          setLettersPerDisk(game[0].length);
-        } catch (error) {
-          if (loadingRef.current === 0) {
-            console.log(`${error.message} Generating random game...`);
+            
+            setNumberOfDisks(game.length);
+            setLettersPerDisk(game[0].length);
+            setUrlGame(game);
+          } catch (error) {
+            if (loadingRef.current === 0) {
+              console.log(`${error.message} Generating random game...`);
+            }
+          } finally {
+            loadingRef.current++;
           }
-        } finally {
-          loadingRef.current++;
         }
       }
-      
-      if (!game) {
-        game = newGame(wordsList, lettersPerDisk, numberOfDisks);
-      }
-      
-      
-      setDisksText(game);
-      setRotatedDisksText(game);
-      setHasWon(false);
     }
-  }, [wordsList, numberOfDisks, lettersPerDisk]);
-  
-  useEffect(() => {
-    if (hasWon) {
-      const element = document.querySelector('.DisksContainer');
-      party.confetti(element, {
-        count: party.variation.range(50, 70),
-      });
-      updateUnlimitedStats();
-    }
-  }, [hasWon]);
-  
-  const onRotate = (rotatedDisksText) => {
-    setRotatedDisksText(rotatedDisksText);
-    setHasWon(isSolved(wordsList, rotatedDisksText));
-  }
-  
-  const handleClickNewGame = () => {
-    window.adBreak({
-      type: 'next',
-      name: 'new-game',
-      beforeAd: () => {
-        document.querySelectorAll('.adsbygoogle[data-slotcar-interstitial="true"], .adsbygoogle[data-slotcar-interstitial="true"] *').forEach(function(el) {
-          if (CSS.supports("height: 100dvh")) {
-            el.style.width = "100dvw";
-            el.style.height = "100dvh";
-          } else { 
-            el.style.width = "100vw";
-            el.style.height = "100vh";
-          }
-        });
-      }
-    });
-    
-    const game = newGame(wordsList, lettersPerDisk, numberOfDisks);
-    setDisksText(game);
-    setRotatedDisksText(game);
-    setHasWon(false);
-  }
+  }, [wordsList]);
   
   const handleChangeNumberOfDisks = (val) => {
     setNumberOfDisks(val);
@@ -283,62 +172,9 @@ function App() {
     localStorage.setItem('wd-useUppercase', val);
   }
   
-  const handleChangeUseSwipeMode = (val) => {
-    setUseSwipeMode(val);
+  const handleChangeUseSwipe = (val) => {
+    setUseSwipe(val);
     localStorage.setItem('wd-useSwipeMode', val);
-  }
-  
-  const updateUnlimitedStats = () => {
-    const newStats = unlimitedStats.slice();
-    const unlimitedWins = newStats.reduce((partialSum, a) => partialSum + a, 0) + 1;
-    const achievementThresholds = [1, 5, 10, 20, 50, 100];
-    
-    const val = ++newStats[numberOfDisks - 3];
-    setUnlimitedStats(newStats);
-    localStorage.setItem('wd-unlimitedStats-' + numberOfDisks, val);
-    
-    if (achievementThresholds.includes(unlimitedWins)) {
-      let message = `Win ${unlimitedWins} game${unlimitedWins == 1 ? '' : 's'}`;
-      if (unlimitedWins == 1) {
-        message += " - Nicely done!";
-      } else if (unlimitedWins == 5 && localStorage.getItem('wd-numberOfDisks') == null) {
-        message += " - Impressive! Why not add another disk?";
-      }
-      
-      setSnackPack((prev) => [...prev, { 
-        message: message, 
-        key: new Date().getTime() 
-      }]);
-    }
-  }
-  
-  const getColumnWords = () => {
-    const columnWords = [];
-    const letterMatrix = transpose(rotatedDisksText);
-    for (let i=0; i < letterMatrix.length; i++) {
-      const word = letterMatrix[i].join('');
-      let options;
-      if (wordsList.includes(word)) {
-        options = { inList: true, definition: definitions.get(word) };
-      } else {
-        options = { inList: false }
-      }
-      columnWords.push({ word, options });
-    }
-    return columnWords;
-  }
-  
-  const updateDefinitions = (k, v) => {
-    setDefinitions(definitions.set(k, v));
-  }
-  
-    const getQueryString = () => {
-    if (!disksText) {
-      return '';
-    }
-    
-    const disks = disksText.map((disk) => disk.join('')).join('_');
-    return `?disks=${disks}`;
   }
   
   return (
@@ -356,32 +192,38 @@ function App() {
           </Box>
         }
         <Box role="main" className="Main">
-          <MenuBar 
-            handleClickNewGame={handleClickNewGame}
-            numberOfDisks={numberOfDisks}
-            setNumberOfDisks={handleChangeNumberOfDisks}
-            lettersPerDisk={lettersPerDisk}
-            setLettersPerDisk={handleChangeLettersPerDisk}
-            useUppercase={useUppercase}
-            setUseUppercase={handleChangeUseUppercase}
-            useSwipeMode={useSwipeMode}
-            setUseSwipeMode={handleChangeUseSwipeMode}
-            getColumnWords={getColumnWords}
-            updateDefinitions={updateDefinitions}
-            getQueryString={getQueryString}
-            unlimitedStats={unlimitedStats}
-          />
-          <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
-            <ReactDisks 
-              disksText={disksText}
-              theme={theme.palette.primary}
-              onRotate={debounce(onRotate, 500)}
-              disabled={hasWon}
-              swipeMode={useSwipeMode}
+          <GameContext.Provider 
+            value={{
+              gameMode,
+              wordsList, 
+              disksText, 
+              setDisksText, 
+              rotatedDisksText, 
+              setRotatedDisksText, 
+              useUppercase, 
+              handleChangeUseUppercase, 
+              useSwipe, 
+              handleChangeUseSwipe
+            }}
+          >
+            <MenuBar 
+              numberOfDisks={numberOfDisks}
+              setNumberOfDisks={handleChangeNumberOfDisks}
+              lettersPerDisk={lettersPerDisk}
+              setLettersPerDisk={handleChangeLettersPerDisk}
+              unlimitedStats={unlimitedStats}
             />
-            <NewGameButton handleClick={handleClickNewGame} doTransition={!resizing} doPulsate={hasWon} />
-            <ConsecutiveSnackbars snackPack={snackPack} setSnackPack={setSnackPack} />
-          </Box>
+            {gameMode === 'unlimited' &&
+              <UnlimitedMode
+                firstGame={urlGame}
+                stats={unlimitedStats}
+                setStats={setUnlimitedStats}
+                numberOfDisks={numberOfDisks}
+                lettersPerDisk={lettersPerDisk}
+                buttonTransition={!resizing}
+              />
+            }
+          </GameContext.Provider>
         </Box>
         {orientation === 'landscape' && !resizing && 
           <Box className="vertical-ad-right">

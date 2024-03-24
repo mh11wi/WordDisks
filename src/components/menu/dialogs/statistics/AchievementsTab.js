@@ -1,6 +1,6 @@
-import React from 'react';
 import { Alert, Box } from '@mui/material';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+
 
 const AchievementsTab = (props) => {
   const unlimitedWins = props.unlimitedStats.reduce((partialSum, a) => partialSum + a, 0);

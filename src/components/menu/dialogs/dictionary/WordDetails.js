@@ -1,5 +1,6 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import { TableCell } from '@mui/material';
+
 
 async function fetchWithTimeout(resource, options = {}) {
   const { timeout = 5000 } = options;
@@ -44,7 +45,7 @@ const WordDetails = ({ index, word, options, updateDefinitions }) => {
     } else {
       setDetails('Not in word list');
     }
-  }, [word, options, updateDefinitions]);
+  }, [word, options]);
   
   return (
     <Fragment>

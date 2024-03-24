@@ -1,32 +1,47 @@
-import React, { useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 import { Help, Menu, MenuBook, Settings } from '@mui/icons-material';
-import MainMenu from './MainMenu';
-import HelpDialog from './HelpDialog';
-import SettingsDialog from './SettingsDialog';
-import WordsDialog from './WordsDialog';
-import TipsDialog from './TipsDialog';
-import ShareDialog from './ShareDialog';
-import StatisticsDialog from './StatisticsDialog';
+import MainMenu from 'components/menu/MainMenu';
+import HelpDialog from 'components/menu/dialogs/help/HelpDialog';
+import SettingsDialog from 'components/menu/dialogs/settings/SettingsDialog';
+import DictionaryDialog from 'components/menu/dialogs/dictionary/DictionaryDialog';
+import TipsDialog from 'components/menu/dialogs/tips/TipsDialog';
+import ShareDialog from 'components/menu/dialogs/share/ShareDialog';
+import StatisticsDialog from 'components/menu/dialogs/statistics/StatisticsDialog';
+import { isMobile } from 'helpers/app';
+import { GameContext } from 'src/App';
 
-function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
 
 const MenuBar = (props) => {
+  const dictionaryRef = useRef();
+  const { gameMode, disksText } = useContext(GameContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(true);
   const [tipsOpen, setTipsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [dictionaryOpen, setDictionaryOpen] = useState(false);
-  const [columnWords, setColumnWords] = useState(null);
   const [shareOpen, setShareOpen] = useState(false);
   const [statisticsOpen, setStatisticsOpen] = useState(false);
   
+  let text, query;
+  switch (gameMode) {
+    case 'unlimited':
+      if (disksText) {
+        const disks = disksText.map((disk) => disk.join('')).join('_');
+        text = "Can you solve this puzzle?";
+        query = `?disks=${disks}`;
+        break;
+      }
+    default:
+      text = "Like word games? Try:";
+      query = "";
+      break;
+  }
+    
   const shareData = {
     title: "Word Disks",
-    text: props.getQueryString() ? "Can you solve this puzzle?" : "Like word games? Try:",
-    url: "https://mh11wi.github.io/WordDisks" + props.getQueryString()
+    text: text,
+    url: "https://mh11wi.github.io/WordDisks" + query
   };
   
   const handleClickMenu = () => {
@@ -62,7 +77,7 @@ const MenuBar = (props) => {
   }
   
   const handleClickDictionary = () => {
-    setColumnWords(props.getColumnWords());
+    dictionaryRef.current.updateData();
     setDictionaryOpen(true);
   }
   
@@ -119,7 +134,6 @@ const MenuBar = (props) => {
         <HelpDialog
           open={helpOpen}
           onClose={handleCloseHelp}
-          useSwipeMode={props.useSwipeMode}
         />
         
         <Typography variant="h5" component="h1" align="center" sx={{ fontWeight: 500, flexGrow: 1 }}>
@@ -129,11 +143,10 @@ const MenuBar = (props) => {
         <IconButton aria-label="Dictionary" onClick={handleClickDictionary} color="inherit">
           <MenuBook />
         </IconButton>
-        <WordsDialog
+        <DictionaryDialog
+          ref={dictionaryRef}
           open={dictionaryOpen}
           onClose={handleCloseDictionary}
-          data={columnWords}
-          updateDefinitions={props.updateDefinitions}
         />
         
         <IconButton aria-label="Settings" onClick={handleClickSettings} color="inherit">
@@ -146,10 +159,6 @@ const MenuBar = (props) => {
           setNumberOfDisks={props.setNumberOfDisks}
           lettersPerDisk={props.lettersPerDisk}
           setLettersPerDisk={props.setLettersPerDisk}
-          useUppercase={props.useUppercase}
-          setUseUppercase={props.setUseUppercase}
-          useSwipeMode={props.useSwipeMode}
-          setUseSwipeMode={props.setUseSwipeMode}
         />
         
         {/* Dialogs where icon only in MainMenu: */}

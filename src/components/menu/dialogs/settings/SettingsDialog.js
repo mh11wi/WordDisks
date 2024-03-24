@@ -1,4 +1,4 @@
-import React from 'react';
+import { useContext } from 'react';
 import {
   Button, 
   Dialog, 
@@ -10,6 +10,9 @@ import {
   Switch,
   Typography
 } from '@mui/material';
+import { isTouchDevice } from 'helpers/app';
+import { GameContext } from 'src/App';
+
 
 const wordsMarks = [
   { value: 2, label: '2' },
@@ -26,11 +29,9 @@ const disksMarks = [
   { value: 7, label: '7' },
 ];
 
-function isTouchDevice() {
-  return ('ontouchstart' in window)
-}
-
 const SettingsDialog = (props) => {
+  const { gameMode, useUppercase, handleChangeUseUppercase, useSwipe, handleChangeUseSwipe } = useContext(GameContext);
+  
   const onWordsChange = (event, newValue) => {
     props.setLettersPerDisk(newValue);
   }
@@ -40,11 +41,11 @@ const SettingsDialog = (props) => {
   }
   
   const onUppercaseChange = (event, newValue) => {
-    props.setUseUppercase(newValue);
+    handleChangeUseUppercase(newValue);
   }
   
-  const onSwipeModeChange = (event, newValue) => {
-    props.setUseSwipeMode(newValue);
+  const onSwipeChange = (event, newValue) => {
+    handleChangeUseSwipe(newValue);
   }
   
   return (
@@ -58,44 +59,51 @@ const SettingsDialog = (props) => {
     >
       <DialogTitle id="settings-dialog-title">Settings</DialogTitle>
       <DialogContent id="settings-dialog-content" dividers={true}>
-        <DialogContentText component="div" sx={{ mb: 1 }}>
-          <Typography id="words-slider">
-            Number of words
-          </Typography>
-          <Slider 
-            aria-labelledby="words-slider"
-            value={props.lettersPerDisk}
-            onChangeCommitted={onWordsChange}
-            step={null}
-            min={2}
-            max={8}
-            marks={wordsMarks}
-          />
-        </DialogContentText>
-        <DialogContentText component="div" sx={{ mb: 1 }}>
-          <Typography id="disks-slider">
-            Number of disks
-          </Typography>
-          <Slider 
-            aria-labelledby="disks-slider"
-            value={props.numberOfDisks}
-            onChangeCommitted={onDisksChange}
-            step={null}
-            min={3}
-            max={7}
-            marks={disksMarks}
-          />
-        </DialogContentText>
+        {gameMode === 'unlimited' &&
+          <DialogContentText component="div" sx={{ mb: 1 }}>
+            <Typography id="words-slider">
+              Number of words
+            </Typography>
+            <Slider 
+              aria-labelledby="words-slider"
+              value={props.lettersPerDisk}
+              onChangeCommitted={onWordsChange}
+              step={null}
+              min={2}
+              max={8}
+              marks={wordsMarks}
+            />
+          </DialogContentText>
+        }
+        
+        {gameMode === 'unlimited' &&
+          <DialogContentText component="div" sx={{ mb: 1 }}>
+            <Typography id="disks-slider">
+              Number of disks
+            </Typography>
+            <Slider 
+              aria-labelledby="disks-slider"
+              value={props.numberOfDisks}
+              onChangeCommitted={onDisksChange}
+              step={null}
+              min={3}
+              max={7}
+              marks={disksMarks}
+            />
+          </DialogContentText>
+        }
+        
         <DialogContentText component="div">
           <Typography id="uppercase-switch">
             Uppercase letters
           </Typography>
           <Switch
             inputProps={{ 'aria-labelledby': 'uppercase-switch' }}
-            checked={props.useUppercase}
+            checked={useUppercase}
             onChange={onUppercaseChange}
           />
         </DialogContentText>
+        
         {isTouchDevice() && 
           <DialogContentText component="div" sx={{ pt: 2 }}>
             <Typography id="swipe-mode-switch">
@@ -103,8 +111,8 @@ const SettingsDialog = (props) => {
             </Typography>
             <Switch
               inputProps={{ 'aria-labelledby': 'swipe-mode-switch' }}
-              checked={props.useSwipeMode}
-              onChange={onSwipeModeChange}
+              checked={useSwipe}
+              onChange={onSwipeChange}
             />
           </DialogContentText>
         }

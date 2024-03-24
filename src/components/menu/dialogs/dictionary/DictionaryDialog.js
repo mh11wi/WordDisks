@@ -1,4 +1,4 @@
-import React from 'react';
+import { forwardRef, useContext, useImperativeHandle, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
   Button,
@@ -14,11 +14,44 @@ import {
   TableHead, 
   TableRow 
 } from '@mui/material';
-import WordDetails from './WordDetails';
+import WordDetails from 'components/menu/dialogs/dictionary/WordDetails';
+import { transpose } from 'helpers/game';
+import { GameContext } from 'src/App';
 
 
-const WordsDialog = (props) => {
+const DictionaryDialog = forwardRef((props, ref) => {
   const theme = useTheme();
+  const { wordsList, rotatedDisksText } = useContext(GameContext);
+  const [data, setData] = useState(null);
+  const [definitions, setDefinitions] = useState(new Map());
+  
+  useImperativeHandle(ref, () => {
+    return {
+      updateData() {
+        const words = [];
+        const letterMatrix = transpose(rotatedDisksText);
+        for (let i = 0; i < letterMatrix.length; i++) {
+          const word = letterMatrix[i].join('');
+          
+          let options;
+          if (wordsList.includes(word)) {
+            options = { inList: true, definition: definitions.get(word) };
+          } else {
+            options = { inList: false }
+          }
+          
+          words.push({ word, options });
+        }
+        
+        setData(words);
+      },
+    };
+  }, [wordsList, rotatedDisksText]);
+  
+  const updateDefinitions = (k, v) => {
+    setDefinitions(definitions.set(k, v));
+  }
+  
   return (
     <Dialog
       aria-labelledby="words-dialog-title"
@@ -30,7 +63,7 @@ const WordsDialog = (props) => {
     >
       <DialogTitle id="words-dialog-title">Dictionary</DialogTitle>
       <DialogContent id="words-dialog-content" dividers={true}>
-        {props.data &&
+        {data &&
           <TableContainer component={Paper}>
             <Table aria-label="Table of Words" align="center">
               <TableHead sx={{ backgroundColor: theme.palette.action.hover }}>
@@ -41,7 +74,7 @@ const WordsDialog = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.data.map((row, index) => {
+                {data.map((row, index) => {
                   return (
                     <TableRow 
                       key={index}
@@ -55,7 +88,7 @@ const WordsDialog = (props) => {
                         index={index + 1}  
                         word={row.word} 
                         options={row.options} 
-                        updateDefinitions={props.updateDefinitions}
+                        updateDefinitions={updateDefinitions}
                       />
                     </TableRow>
                   )
@@ -70,6 +103,6 @@ const WordsDialog = (props) => {
       </DialogActions>
     </Dialog>
   );
-};
+});
 
-export default WordsDialog;
+export default DictionaryDialog;
