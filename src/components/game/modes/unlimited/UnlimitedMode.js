@@ -14,6 +14,7 @@ const UnlimitedMode = (props) => {
       setDisksText(props.firstGame);
       setRotatedDisksText(props.firstGame);
     } else {
+      setPulsateButton(false);
       gameRef.current.loadNewGame(props.lettersPerDisk, props.numberOfDisks);
     }
   }, [props.firstGame, props.lettersPerDisk, props.numberOfDisks]);
