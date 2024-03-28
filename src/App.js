@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import AdSense from 'react-adsense';
 import MenuBar from 'components/menu/MenuBar';
 import UnlimitedMode from 'components/game/modes/unlimited/UnlimitedMode';
+import ChallengeMode from 'components/game/modes/challenge/ChallengeMode';
 import useWindowOrientation from 'hooks/useWindowOrientation';
 import { isTouchDevice } from 'helpers/app';
 import '@fontsource/roboto/300.css';
@@ -56,6 +57,7 @@ function App() {
   const [useSwipe, setUseSwipe] = useState(
     localStorage.getItem('wd-useSwipeMode') ? localStorage.getItem('wd-useSwipeMode') === 'true' : isTouchDevice()
   );
+  const [timerStarted, setTimerStarted] = useState(false);
   
   // Unlimited Mode State
   const [urlGame, setUrlGame] = useState(null);
@@ -68,6 +70,11 @@ function App() {
     parseInt(localStorage.getItem('wd-unlimitedStats-6')) || 0,
     parseInt(localStorage.getItem('wd-unlimitedStats-7')) || 0
   ]);
+  
+  // Challenge Mode State
+  const [challengeNumberOfDisks, setChallengeNumberOfDisks] = useState(3);
+  const [challengeLettersPerDisk, setChallengeLettersPerDisk] = useState(4);
+  const [challengeTargetWins, setChallengeTargetWins] = useState(100);
   
   useEffect(() => {
     async function fetchWords() {
@@ -103,56 +110,79 @@ function App() {
   }, []);
   
   useEffect(() => {
-    if (wordsList) {
-      let game;
-      if (loadingRef.current < 2) {
-        const params = new URLSearchParams(window.location.search);
-        const urlDisks = params.get('disks');
-        
-        if (urlDisks) {
-          setGameMode('unlimited');
-        } else {
-          // TO-DO: add more cases for different game modes
-          setGameMode('unlimited');
-        }  
-        
-        if (urlDisks) {
-          try {
-            const disks = urlDisks.split('_');
-            if (disks.length < 3 || disks.length > 7) {
-              throw new Error('Invalid number of disks.');
-            }
-            
-            const numberOfColumns = disks[0].length;
-            if (numberOfColumns !== 2 &&  numberOfColumns !== 4 && numberOfColumns !== 6 && numberOfColumns !== 8) {
-              throw new Error('Invalid number of words.');
-            }
-            
-            game = disks.map((disk) => {
-              const columns = disk.toLowerCase().split('');
-              if (columns.length !== numberOfColumns) {
-                throw new Error('Inconsistent number of words.');
-              }
-              
-              return columns.map((column) => {
-                if (!column.match(/[a-z]/i)) {
-                  throw new Error('Invalid disk contents.');
-                }
-                return column;
-              });
-            });
-            
-            setNumberOfDisks(game.length);
-            setLettersPerDisk(game[0].length);
-            setUrlGame(game);
-          } catch (error) {
-            if (loadingRef.current === 0) {
-              console.log(`${error.message} Generating random game...`);
-            }
-          } finally {
-            loadingRef.current++;
+    if (wordsList && loadingRef.current < 2) {
+      const params = new URLSearchParams(window.location.search); 
+      
+      try {
+        if (params.get('disks')) {
+          // Load a specific puzzle if valid
+          const disks = params.get('disks').split('_');
+          if (disks.length < 3 || disks.length > 7) {
+            throw new Error('Invalid number of disks.');
           }
+          
+          const numberOfColumns = disks[0].length;
+          if (numberOfColumns !== 2 &&  numberOfColumns !== 4 && numberOfColumns !== 6 && numberOfColumns !== 8) {
+            throw new Error('Invalid number of words.');
+          }
+          
+          const game = disks.map((disk) => {
+            const columns = disk.toLowerCase().split('');
+            if (columns.length !== numberOfColumns) {
+              throw new Error('Inconsistent number of words.');
+            }
+            
+            return columns.map((column) => {
+              if (!column.match(/[a-z]/i)) {
+                throw new Error('Invalid disk contents.');
+              }
+              return column;
+            });
+          });
+          
+          setGameMode('unlimited');
+          setNumberOfDisks(game.length);
+          setLettersPerDisk(game[0].length);
+          setUrlGame(game);
+          
+        } else if (params.get('challenge')) {
+          // Load a specific challenge if valid
+          const challenge = params.get('challenge').split('_');
+          if (challenge.length !== 3) {
+            throw new Error('Invalid number of challenge parameters.');
+          }
+          
+          const disks = parseInt(challenge[0]);
+          if (isNaN(disks) || disks < 3 || disks > 7) {
+            throw new Error('Invalid number of disks for challenge.');
+          }
+          
+          const numberOfColumns = parseInt(challenge[1]);
+          if (numberOfColumns !== 2 &&  numberOfColumns !== 4 && numberOfColumns !== 6 && numberOfColumns !== 8) {
+            throw new Error('Invalid number of words for challenge.');
+          }
+          
+          const numberOfWins = parseInt(challenge[2]);
+          if (isNaN(numberOfWins) || numberOfWins <= 0) {
+            throw new Error('Invalid number of wins for challenge.');
+          }
+          
+          setGameMode('challenge');
+          setChallengeNumberOfDisks(disks);
+          setChallengeLettersPerDisk(numberOfColumns);
+          setChallengeTargetWins(numberOfWins);
+        
+        } else {
+          // Load unlimited mode otherwise
+          setGameMode('unlimited');
         }
+      } catch (error) {
+        if (loadingRef.current === 0) {
+          console.log(`${error.message} Generating random game...`);
+          setGameMode('unlimited');
+        }
+      } finally {
+        loadingRef.current++;
       }
     }
   }, [wordsList]);
@@ -203,7 +233,9 @@ function App() {
               useUppercase, 
               handleChangeUseUppercase, 
               useSwipe, 
-              handleChangeUseSwipe
+              handleChangeUseSwipe,
+              timerStarted,
+              setTimerStarted
             }}
           >
             <MenuBar 
@@ -212,7 +244,9 @@ function App() {
               lettersPerDisk={lettersPerDisk}
               setLettersPerDisk={handleChangeLettersPerDisk}
               unlimitedStats={unlimitedStats}
+              challengeTargetWins={challengeTargetWins}
             />
+            
             {gameMode === 'unlimited' &&
               <UnlimitedMode
                 firstGame={urlGame}
@@ -221,6 +255,14 @@ function App() {
                 numberOfDisks={numberOfDisks}
                 lettersPerDisk={lettersPerDisk}
                 buttonTransition={!resizing}
+              />
+            }
+            
+            {gameMode === 'challenge' && 
+              <ChallengeMode 
+                numberOfDisks={challengeNumberOfDisks}
+                lettersPerDisk={challengeLettersPerDisk}
+                targetWins={challengeTargetWins}
               />
             }
           </GameContext.Provider>

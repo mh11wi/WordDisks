@@ -49,7 +49,13 @@ const GameInterface = forwardRef((props, ref) => {
   }
   
   return (
-    <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`}>
+    <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`} sx={{position: 'relative'}}>
+      <Box sx={{position: 'absolute', fontSize: '1.5rem', top: '1rem', left: '1.5rem'}}>
+        { props.left }
+      </Box>
+      <Box sx={{position: 'absolute', fontSize: '1.5rem', top: '1rem', right: '1.5rem'}}>
+        { props.right }
+      </Box>
       <ReactDisks 
         disksText={disksText}
         theme={theme.palette.primary}

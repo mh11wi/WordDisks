@@ -14,7 +14,7 @@ import { GameContext } from 'src/App';
 
 const MenuBar = (props) => {
   const dictionaryRef = useRef();
-  const { gameMode, disksText } = useContext(GameContext);
+  const { gameMode, disksText, setTimerStarted } = useContext(GameContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(true);
   const [tipsOpen, setTipsOpen] = useState(false);
@@ -58,6 +58,9 @@ const MenuBar = (props) => {
   
   const handleCloseHelp = () => {
     setHelpOpen(false);
+    setTimeout(function() {
+      setTimerStarted(true);
+    }, 500);
   }
   
   const handleClickTips = () => {
@@ -134,6 +137,7 @@ const MenuBar = (props) => {
         <HelpDialog
           open={helpOpen}
           onClose={handleCloseHelp}
+          challengeTargetWins={props.challengeTargetWins}
         />
         
         <Typography variant="h5" component="h1" align="center" sx={{ fontWeight: 500, flexGrow: 1 }}>

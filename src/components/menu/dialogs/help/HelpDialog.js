@@ -20,13 +20,25 @@ import { GameContext } from 'src/App';
 
 
 const HelpDialog = (props) => {
-  const { gameMode, useSwipe } = useContext(GameContext);
+  const { gameMode, useSwipe, timerStarted } = useContext(GameContext);
   
   let instructions;
   if (useSwipe) {
     instructions = "You can rotate a disk by tapping on it, and then swiping left or right anywhere on the screen.";
   } else {
     instructions = "You can rotate a disk by clicking on it, and then clicking either the clockwise or counterclockwise arrows that appear.";
+  }
+  
+  const ChallengeText = () => {
+    if (timerStarted) {
+      return (
+        <span>Keep going! Try to solve {props.challengeTargetWins} puzzles as quickly as possible.</span>
+      );
+    } else {
+      return (
+        <span>How quickly can you solve {props.challengeTargetWins} puzzles? Click <strong>START</strong> to begin.</span>
+      );
+    }
   }
   
   return (
@@ -73,6 +85,14 @@ const HelpDialog = (props) => {
                 </List>
               </ListItem>
             }
+            
+            {gameMode === 'challenge' && 
+              <ListItem>
+                <ListItemText>
+                  <ChallengeText />
+                </ListItemText>
+              </ListItem>
+            }
           </List>
         </DialogContentText>
       </DialogContent>
@@ -80,7 +100,7 @@ const HelpDialog = (props) => {
         <DialogContentText sx={{ ml: 1, flexGrow: 1 }}>
           <Link href="https://mh11wi.github.io/privacy-policy.html">Terms & Privacy Policy</Link>
         </DialogContentText>
-        <Button onClick={props.onClose}>Close</Button>
+        <Button onClick={props.onClose}>{(timerStarted || gameMode === 'unlimited') ? 'Close' : 'Start'}</Button>
       </DialogActions>
     </Dialog>
   );
