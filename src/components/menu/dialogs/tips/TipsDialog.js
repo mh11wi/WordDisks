@@ -62,7 +62,7 @@ const steps = [
   {
     icon: ( <EmojiEvents /> ),
     primary: 'Keep Practicing',
-    secondary: 'This game is a great way to test your vocabulary and exercise your brain! Practice at your own pace, or if you are up for a challenge, try increasing the number of disks or number of words.'
+    secondary: 'This game is a great way to test your vocabulary and exercise your brain! Practice at your own pace, or if you are up for a challenge, try increasing the number of disks or number of columns.'
   }
 ];
 

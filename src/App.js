@@ -1,4 +1,4 @@
-import { createContext, useEffect, useRef, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, grey, teal } from '@mui/material/colors';
 import Box from '@mui/material/Box';
@@ -8,6 +8,7 @@ import UnlimitedMode from 'components/game/modes/unlimited/UnlimitedMode';
 import ChallengeMode from 'components/game/modes/challenge/ChallengeMode';
 import useWindowOrientation from 'hooks/useWindowOrientation';
 import { isTouchDevice } from 'helpers/app';
+import { diskMarks, columnMarks } from 'helpers/config';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -45,7 +46,6 @@ const adStyle = {
 export const GameContext = createContext();
 
 function App() {
-  const loadingRef = useRef(0);
   const { orientation, resizing } = useWindowOrientation();
   
   // Game Context State
@@ -57,12 +57,12 @@ function App() {
   const [useSwipe, setUseSwipe] = useState(
     localStorage.getItem('wd-useSwipeMode') ? localStorage.getItem('wd-useSwipeMode') === 'true' : isTouchDevice()
   );
-  const [timerStarted, setTimerStarted] = useState(false);
+  const [timerStatus, setTimerStatus] = useState(null);
   
   // Unlimited Mode State
   const [urlGame, setUrlGame] = useState(null);
-  const [numberOfDisks, setNumberOfDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 3);
-  const [lettersPerDisk, setLettersPerDisk] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
+  const [unlimitedDisks, setUnlimitedDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 3);
+  const [unlimitedColumns, setUnlimitedColumns] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
   const [unlimitedStats, setUnlimitedStats] = useState([
     parseInt(localStorage.getItem('wd-unlimitedStats-3')) || 0,
     parseInt(localStorage.getItem('wd-unlimitedStats-4')) || 0,
@@ -72,9 +72,10 @@ function App() {
   ]);
   
   // Challenge Mode State
-  const [challengeNumberOfDisks, setChallengeNumberOfDisks] = useState(3);
-  const [challengeLettersPerDisk, setChallengeLettersPerDisk] = useState(4);
-  const [challengeTargetWins, setChallengeTargetWins] = useState(100);
+  const [challengeDisks, setChallengeDisks] = useState(3);
+  const [challengeColumns, setChallengeColumns] = useState(4);
+  const [challengeTargetWins, setChallengeTargetWins] = useState(10);
+  const [challengeStats, setChallengeStats] = useState(parseInt(localStorage.getItem('wd-challengeStats')) || 0);
   
   useEffect(() => {
     async function fetchWords() {
@@ -110,26 +111,26 @@ function App() {
   }, []);
   
   useEffect(() => {
-    if (wordsList && loadingRef.current < 2) {
+    if (wordsList) {
       const params = new URLSearchParams(window.location.search); 
       
       try {
         if (params.get('disks')) {
           // Load a specific puzzle if valid
           const disks = params.get('disks').split('_');
-          if (disks.length < 3 || disks.length > 7) {
+          if (!diskMarks.map((mark) => mark.value).includes(disks.length)) {
             throw new Error('Invalid number of disks.');
           }
           
           const numberOfColumns = disks[0].length;
-          if (numberOfColumns !== 2 &&  numberOfColumns !== 4 && numberOfColumns !== 6 && numberOfColumns !== 8) {
-            throw new Error('Invalid number of words.');
+          if (!columnMarks.map((mark) => mark.value).includes(numberOfColumns)) {
+            throw new Error('Invalid number of columns.');
           }
           
           const game = disks.map((disk) => {
             const columns = disk.toLowerCase().split('');
             if (columns.length !== numberOfColumns) {
-              throw new Error('Inconsistent number of words.');
+              throw new Error('Inconsistent number of columns.');
             }
             
             return columns.map((column) => {
@@ -141,8 +142,8 @@ function App() {
           });
           
           setGameMode('unlimited');
-          setNumberOfDisks(game.length);
-          setLettersPerDisk(game[0].length);
+          setUnlimitedDisks(game.length);
+          setUnlimitedColumns(game[0].length);
           setUrlGame(game);
           
         } else if (params.get('challenge')) {
@@ -152,48 +153,45 @@ function App() {
             throw new Error('Invalid number of challenge parameters.');
           }
           
-          const disks = parseInt(challenge[0]);
-          if (isNaN(disks) || disks < 3 || disks > 7) {
+          const numberOfDisks = parseInt(challenge[0]);
+          if (isNaN(numberOfDisks) || !diskMarks.map((mark) => mark.value).includes(numberOfDisks)) {
             throw new Error('Invalid number of disks for challenge.');
           }
           
           const numberOfColumns = parseInt(challenge[1]);
-          if (numberOfColumns !== 2 &&  numberOfColumns !== 4 && numberOfColumns !== 6 && numberOfColumns !== 8) {
-            throw new Error('Invalid number of words for challenge.');
+          if (isNaN(numberOfColumns) || !columnMarks.map((mark) => mark.value).includes(numberOfColumns)) {
+            throw new Error('Invalid number of columns for challenge.');
           }
           
           const numberOfWins = parseInt(challenge[2]);
-          if (isNaN(numberOfWins) || numberOfWins <= 0) {
-            throw new Error('Invalid number of wins for challenge.');
+          if (isNaN(numberOfWins) || numberOfWins <= 1) {
+            throw new Error('Invalid number of games for challenge.');
           }
           
           setGameMode('challenge');
-          setChallengeNumberOfDisks(disks);
-          setChallengeLettersPerDisk(numberOfColumns);
+          setChallengeDisks(numberOfDisks);
+          setChallengeColumns(numberOfColumns);
           setChallengeTargetWins(numberOfWins);
+          window.adConfig({preloadAdBreaks: 'on'});
         
         } else {
           // Load unlimited mode otherwise
           setGameMode('unlimited');
         }
       } catch (error) {
-        if (loadingRef.current === 0) {
-          console.log(`${error.message} Generating random game...`);
-          setGameMode('unlimited');
-        }
-      } finally {
-        loadingRef.current++;
+        console.log(`${error.message} Generating random game in Unlimited Mode...`);
+        setGameMode('unlimited');
       }
     }
   }, [wordsList]);
   
-  const handleChangeNumberOfDisks = (val) => {
-    setNumberOfDisks(val);
+  const handleChangeUnlimitedDisks = (val) => {
+    setUnlimitedDisks(val);
     localStorage.setItem('wd-numberOfDisks', val);
   }
   
-  const handleChangeLettersPerDisk = (val) => {
-    setLettersPerDisk(val);
+  const handleChangeUnlimitedColumns = (val) => {
+    setUnlimitedColumns(val);
     localStorage.setItem('wd-lettersPerDisk', val);
   }
   
@@ -234,35 +232,46 @@ function App() {
               handleChangeUseUppercase, 
               useSwipe, 
               handleChangeUseSwipe,
-              timerStarted,
-              setTimerStarted
+              timerStatus,
+              setTimerStatus
             }}
           >
-            <MenuBar 
-              numberOfDisks={numberOfDisks}
-              setNumberOfDisks={handleChangeNumberOfDisks}
-              lettersPerDisk={lettersPerDisk}
-              setLettersPerDisk={handleChangeLettersPerDisk}
-              unlimitedStats={unlimitedStats}
-              challengeTargetWins={challengeTargetWins}
-            />
+            {gameMode &&
+              <MenuBar 
+                unlimitedDisks={unlimitedDisks}
+                setUnlimitedDisks={handleChangeUnlimitedDisks}
+                unlimitedColumns={unlimitedColumns}
+                setUnlimitedColumns={handleChangeUnlimitedColumns}
+                unlimitedStats={unlimitedStats}
+                challengeDisks={challengeDisks}
+                setChallengeDisks={setChallengeDisks}
+                challengeColumns={challengeColumns}
+                setChallengeColumns={setChallengeColumns}
+                challengeTargetWins={challengeTargetWins}
+                setChallengeTargetWins={setChallengeTargetWins}
+                challengeStats={challengeStats}
+              />
+            }
             
             {gameMode === 'unlimited' &&
               <UnlimitedMode
                 firstGame={urlGame}
                 stats={unlimitedStats}
                 setStats={setUnlimitedStats}
-                numberOfDisks={numberOfDisks}
-                lettersPerDisk={lettersPerDisk}
+                numberOfDisks={unlimitedDisks}
+                numberOfColumns={unlimitedColumns}
                 buttonTransition={!resizing}
               />
             }
             
             {gameMode === 'challenge' && 
               <ChallengeMode 
-                numberOfDisks={challengeNumberOfDisks}
-                lettersPerDisk={challengeLettersPerDisk}
+                stats={challengeStats}
+                setStats={setChallengeStats}
+                numberOfDisks={challengeDisks}
+                numberOfColumns={challengeColumns}
                 targetWins={challengeTargetWins}
+                buttonTransition={!resizing}
               />
             }
           </GameContext.Provider>

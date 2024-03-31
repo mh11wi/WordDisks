@@ -34,8 +34,8 @@ const GameInterface = forwardRef((props, ref) => {
         }]);
       },
       
-      loadNewGame(lettersPerDisk, numberOfDisks) {
-        const game = newGame(wordsList, lettersPerDisk, numberOfDisks);
+      loadNewGame(numberOfColumns, numberOfDisks) {
+        const game = newGame(wordsList, numberOfColumns, numberOfDisks);
         setDisksText(game);
         setRotatedDisksText(game);
         setHasWon(false);
@@ -49,14 +49,26 @@ const GameInterface = forwardRef((props, ref) => {
   }
   
   return (
-    <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`} sx={{position: 'relative'}}>
-      <Box sx={{position: 'absolute', fontSize: '1.5rem', top: '1rem', left: '1.5rem'}}>
+    <Box className={`Game ${useUppercase ? 'uppercase': 'lowercase'}`} sx={{ position: 'relative' }}>
+      <Box 
+        className="gameLabel left" 
+        sx={{ 
+          color: props.completed ? 'success.dark' : '',
+          fontWeight: props.completed ? '500' : ''
+        }}
+      >
         { props.left }
       </Box>
-      <Box sx={{position: 'absolute', fontSize: '1.5rem', top: '1rem', right: '1.5rem'}}>
+      <Box 
+        className="gameLabel right" 
+        sx={{ 
+          color: props.completed ? 'success.dark' : '',
+          fontWeight: props.completed ? '500' : '' 
+        }}
+      >
         { props.right }
       </Box>
-      <ReactDisks 
+      <ReactDisks
         disksText={disksText}
         theme={theme.palette.primary}
         onRotate={debounce(onRotate, 500)}

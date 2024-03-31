@@ -9,9 +9,9 @@ You can rotate a disk by clicking on it, and then clicking either the clockwise 
 ## Settings
 The following settings are configurable in the game:
 
-- number of words
-
 - number of disks
+
+- number of columns
 
 - whether letters should be uppercase or lowercase
 

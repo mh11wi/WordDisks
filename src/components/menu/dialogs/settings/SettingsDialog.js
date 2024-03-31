@@ -11,33 +11,19 @@ import {
   Typography
 } from '@mui/material';
 import { isTouchDevice } from 'helpers/app';
+import { diskMarks, columnMarks } from 'helpers/config';
 import { GameContext } from 'src/App';
 
-
-const wordsMarks = [
-  { value: 2, label: '2' },
-  { value: 4, label: '4' },
-  { value: 6, label: '6' },
-  { value: 8, label: '8' },
-];
-
-const disksMarks = [
-  { value: 3, label: '3' },
-  { value: 4, label: '4' },
-  { value: 5, label: '5' },
-  { value: 6, label: '6' },
-  { value: 7, label: '7' },
-];
 
 const SettingsDialog = (props) => {
   const { gameMode, useUppercase, handleChangeUseUppercase, useSwipe, handleChangeUseSwipe } = useContext(GameContext);
   
-  const onWordsChange = (event, newValue) => {
-    props.setLettersPerDisk(newValue);
-  }
-  
   const onDisksChange = (event, newValue) => {
     props.setNumberOfDisks(newValue);
+  }
+  
+  const onColumnsChange = (event, newValue) => {
+    props.setNumberOfColumns(newValue);
   }
   
   const onUppercaseChange = (event, newValue) => {
@@ -61,23 +47,6 @@ const SettingsDialog = (props) => {
       <DialogContent id="settings-dialog-content" dividers={true}>
         {gameMode === 'unlimited' &&
           <DialogContentText component="div" sx={{ mb: 1 }}>
-            <Typography id="words-slider">
-              Number of words
-            </Typography>
-            <Slider 
-              aria-labelledby="words-slider"
-              value={props.lettersPerDisk}
-              onChangeCommitted={onWordsChange}
-              step={null}
-              min={2}
-              max={8}
-              marks={wordsMarks}
-            />
-          </DialogContentText>
-        }
-        
-        {gameMode === 'unlimited' &&
-          <DialogContentText component="div" sx={{ mb: 1 }}>
             <Typography id="disks-slider">
               Number of disks
             </Typography>
@@ -86,9 +55,26 @@ const SettingsDialog = (props) => {
               value={props.numberOfDisks}
               onChangeCommitted={onDisksChange}
               step={null}
-              min={3}
-              max={7}
-              marks={disksMarks}
+              min={diskMarks[0].value}
+              max={diskMarks[diskMarks.length - 1].value}
+              marks={diskMarks}
+            />
+          </DialogContentText>
+        }
+      
+        {gameMode === 'unlimited' &&
+          <DialogContentText component="div" sx={{ mb: 1 }}>
+            <Typography id="columns-slider">
+              Number of columns
+            </Typography>
+            <Slider 
+              aria-labelledby="columns-slider"
+              value={props.numberOfColumns}
+              onChangeCommitted={onColumnsChange}
+              step={null}
+              min={columnMarks[0].value}
+              max={columnMarks[columnMarks.length - 1].value}
+              marks={columnMarks}
             />
           </DialogContentText>
         }
