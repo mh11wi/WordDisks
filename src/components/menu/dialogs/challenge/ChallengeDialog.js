@@ -33,7 +33,7 @@ const ChallengeDialog = (props) => {
       open={props.open} 
       onClose={props.onClose}
     >
-      <DialogTitle id="chalenege-dialog-title">Create Challenge</DialogTitle>
+      <DialogTitle id="challenge-dialog-title">Create Challenge</DialogTitle>
       <DialogContent id="challenge-dialog-content" dividers={true}>
         <DialogContentText component="div" sx={{ mb: 1 }}>
           <Typography id="wins-slider">
@@ -65,7 +65,7 @@ const ChallengeDialog = (props) => {
           />
         </DialogContentText>
       
-        <DialogContentText component="div" sx={{ mb: 1 }}>
+        <DialogContentText component="div">
           <Typography id="columns-slider">
             Number of columns per game
           </Typography>
