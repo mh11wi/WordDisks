@@ -35,7 +35,7 @@ const ChallengeDialog = (props) => {
     >
       <DialogTitle id="challenge-dialog-title">Create Challenge</DialogTitle>
       <DialogContent id="challenge-dialog-content" dividers={true}>
-        <DialogContentText component="div" sx={{ mb: 1 }}>
+        <DialogContentText component="div">
           <Typography id="wins-slider">
             Number of games
           </Typography>
@@ -50,9 +50,13 @@ const ChallengeDialog = (props) => {
           />
         </DialogContentText>
         
+        <DialogContentText sx={{ my: 2, fontWeight: 'bold' }}>
+          Game Settings
+        </DialogContentText>
+        
         <DialogContentText component="div" sx={{ mb: 1 }}>
           <Typography id="disks-slider">
-            Number of disks per game
+            Number of disks
           </Typography>
           <Slider 
             aria-labelledby="disks-slider"
@@ -67,7 +71,7 @@ const ChallengeDialog = (props) => {
       
         <DialogContentText component="div">
           <Typography id="columns-slider">
-            Number of columns per game
+            Number of columns
           </Typography>
           <Slider 
             aria-labelledby="columns-slider"
