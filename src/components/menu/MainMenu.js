@@ -64,8 +64,12 @@ const MainMenu = (props) => {
   }
   
   const handleChangeMode = (event) => {
-    props.onClose();
-    props.handleChangeMode(event);
+    const selected = event.target.closest('.modeOption')?.getAttribute('data-value');
+    
+    if (selected) {
+      props.onClose();
+      props.handleChangeMode(event);
+    }
   }
   
   return (
