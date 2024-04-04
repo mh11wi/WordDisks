@@ -75,7 +75,8 @@ const MainMenu = (props) => {
           width: {
             xs: '50%',
             sm: '33%',
-            lg: '20%'
+            lg: '20%',
+            xl: '17.5%'
           }
         }
       }}
@@ -92,19 +93,19 @@ const MainMenu = (props) => {
                 id="game-mode"
                 label="Game Mode"
                 defaultValue={gameMode}
-                onChange={handleChangeMode}
+                onClose={handleChangeMode}
                 sx={{ 
                   '.MuiListItemIcon-root': { minWidth: 'auto', pr: 2 },
                   '.MuiSelect-select': { display: "flex !important", alignItems: 'center' },
                 }}
               >
-                <MenuItem value="unlimited">
+                <MenuItem className="modeOption" value="unlimited">
                   <ListItemIcon>
                     <AllInclusive />
                   </ListItemIcon>
                   <ListItemText>Unlimited Mode</ListItemText>
                 </MenuItem>
-                <MenuItem value="challenge">
+                <MenuItem className="modeOption" value="challenge">
                   <ListItemIcon>
                     <Grade />
                   </ListItemIcon>
