@@ -63,13 +63,7 @@ function App() {
   const [urlGame, setUrlGame] = useState(null);
   const [unlimitedDisks, setUnlimitedDisks] = useState(parseInt(localStorage.getItem('wd-numberOfDisks')) || 3);
   const [unlimitedColumns, setUnlimitedColumns] = useState(parseInt(localStorage.getItem('wd-lettersPerDisk')) || 4);
-  const [unlimitedStats, setUnlimitedStats] = useState([
-    parseInt(localStorage.getItem('wd-unlimitedStats-3')) || 0,
-    parseInt(localStorage.getItem('wd-unlimitedStats-4')) || 0,
-    parseInt(localStorage.getItem('wd-unlimitedStats-5')) || 0,
-    parseInt(localStorage.getItem('wd-unlimitedStats-6')) || 0,
-    parseInt(localStorage.getItem('wd-unlimitedStats-7')) || 0
-  ]);
+  const [unlimitedStats, setUnlimitedStats] = useState(diskMarks.map((mark) => parseInt(localStorage.getItem(`wd-unlimitedStats-${mark.value}`)) || 0));
   
   // Challenge Mode State
   const [challengeDisks, setChallengeDisks] = useState(3);

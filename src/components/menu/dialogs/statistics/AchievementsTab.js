@@ -1,10 +1,11 @@
 import { Alert, Box } from '@mui/material';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import { getSum } from 'helpers/app';
 import { unlimitedThresholds, challengeThresholds } from 'helpers/config';
 
 
 const AchievementsTab = (props) => {
-  const unlimitedWins = props.unlimitedStats.reduce((partialSum, a) => partialSum + a, 0);
+  const unlimitedWins = getSum(props.unlimitedStats);
   const challengeWins = props.challengeStats;
   
   const unlimitedAchievements = unlimitedThresholds.map((threshold) => {
