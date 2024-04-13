@@ -31,6 +31,7 @@ const theme = createTheme({
     success: {
       light: green[50],
       main: green[300],
+      secondary: green[500],
       dark: green[700]
     },
   },
@@ -69,7 +70,13 @@ function App() {
   const [challengeDisks, setChallengeDisks] = useState(3);
   const [challengeColumns, setChallengeColumns] = useState(4);
   const [challengeTargetWins, setChallengeTargetWins] = useState(10);
-  const [challengeStats, setChallengeStats] = useState(parseInt(localStorage.getItem('wd-challengeStats')) || 0);
+    const [challengeStats, setChallengeStats] = useState(diskMarks.map((mark) => {
+    return {
+      count: parseInt(localStorage.getItem(`wd-challengeStats-${mark.value}`)) || 0,
+      average: parseFloat(localStorage.getItem(`wd-challengeAverage-${mark.value}`)) || 0,
+      best: parseFloat(localStorage.getItem(`wd-challengeBest-${mark.value}`)) || 0,
+    }
+  }));
   
   useEffect(() => {
     async function fetchWords() {
@@ -238,11 +245,8 @@ function App() {
                 setUnlimitedColumns={handleChangeUnlimitedColumns}
                 unlimitedStats={unlimitedStats}
                 challengeDisks={challengeDisks}
-                setChallengeDisks={setChallengeDisks}
                 challengeColumns={challengeColumns}
-                setChallengeColumns={setChallengeColumns}
                 challengeTargetWins={challengeTargetWins}
-                setChallengeTargetWins={setChallengeTargetWins}
                 challengeStats={challengeStats}
               />
             }

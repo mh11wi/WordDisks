@@ -30,6 +30,10 @@ import { isMobile } from 'helpers/app';
 import { GameContext } from 'src/App';
 
 
+function getChallengeQuery(disks, columns, wins) {
+  return `?challenge=${disks}_${columns}_${wins}`;
+}
+
 const MenuBar = (props) => {
   const dictionaryRef = useRef();
   const { gameMode, setGameMode, disksText, timerStatus, setTimerStatus } = useContext(GameContext);
@@ -43,13 +47,11 @@ const MenuBar = (props) => {
   const [challengeOpen, setChallengeOpen] = useState(false);
   const [selectedMode, setSelectedMode] = useState(gameMode);
   
-  const challengeQuery = `?challenge=${props.challengeDisks}_${props.challengeColumns}_${props.challengeTargetWins}`;
   let text, query;
-  
   switch (gameMode) {
     case 'challenge':
       text = `How quickly can you solve ${props.challengeTargetWins} puzzles?`;
-      query = challengeQuery;
+      query = getChallengeQuery(props.challengeDisks, props.challengeColumns, props.challengeTargetWins);
       break;
     case 'unlimited':
       if (disksText) {
@@ -167,9 +169,10 @@ const MenuBar = (props) => {
     setChallengeOpen(false);
   }
   
-  const handleCreateChallenge = () => {
+  const handleCreateChallenge = (disks, columns, wins) => {
     setChallengeOpen(false);
-    window.location = window.location.origin + challengeQuery;
+    const query = getChallengeQuery(disks, columns, wins);
+    window.location = window.location.origin + query;
   }
   
   return (
@@ -237,11 +240,8 @@ const MenuBar = (props) => {
           onClose={handleCloseChallenge}
           onCreate={handleCreateChallenge}
           numberOfDisks={props.challengeDisks}
-          setNumberOfDisks={props.setChallengeDisks}
           numberOfColumns={props.challengeColumns}
-          setNumberOfColumns={props.setChallengeColumns}
           targetWins={props.challengeTargetWins}
-          setTargetWins={props.setChallengeTargetWins}
         />
         
         <Typography variant="h5" component="h1" align="center" sx={{ fontWeight: 500, flexGrow: 1 }}>

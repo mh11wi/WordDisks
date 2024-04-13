@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Button, 
   Dialog, 
@@ -12,16 +13,25 @@ import { diskMarks, columnMarks, winMarks } from 'helpers/config';
 
 
 const ChallengeDialog = (props) => {
+  // State of dialog settings, only persisting to props on submit
+  const [challengeDisks, setChallengeDisks] = useState(props.numberOfDisks);
+  const [challengeColumns, setChallengeColumns] = useState(props.numberOfColumns);
+  const [challengeTargetWins, setChallengeTargetWins] = useState(props.targetWins);
+  
   const onWinsChange = (event, newValue) => {
-    props.setTargetWins(newValue);
+    setChallengeTargetWins(newValue);
   }
   
   const onDisksChange = (event, newValue) => {
-    props.setNumberOfDisks(newValue);
+    setChallengeDisks(newValue);
   }
   
   const onColumnsChange = (event, newValue) => {
-    props.setNumberOfColumns(newValue);
+    setChallengeColumns(newValue);
+  }
+  
+  const handleClickCreate = () => {
+    props.onCreate(challengeDisks, challengeColumns, challengeTargetWins);
   }
   
   return (
@@ -41,7 +51,7 @@ const ChallengeDialog = (props) => {
           </Typography>
           <Slider 
             aria-labelledby="wins-slider"
-            value={props.targetWins}
+            value={challengeTargetWins}
             onChangeCommitted={onWinsChange}
             step={null}
             min={winMarks[0].value}
@@ -60,7 +70,7 @@ const ChallengeDialog = (props) => {
           </Typography>
           <Slider 
             aria-labelledby="disks-slider"
-            value={props.numberOfDisks}
+            value={challengeDisks}
             onChangeCommitted={onDisksChange}
             step={null}
             min={diskMarks[0].value}
@@ -75,7 +85,7 @@ const ChallengeDialog = (props) => {
           </Typography>
           <Slider 
             aria-labelledby="columns-slider"
-            value={props.numberOfColumns}
+            value={challengeColumns}
             onChangeCommitted={onColumnsChange}
             step={null}
             min={columnMarks[0].value}
@@ -85,7 +95,7 @@ const ChallengeDialog = (props) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.onCreate}>Create</Button>
+        <Button onClick={handleClickCreate}>Create</Button>
       </DialogActions>
     </Dialog>
   );
