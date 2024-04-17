@@ -157,7 +157,7 @@ const MenuBar = (props) => {
           break;     
         default:
           if (gameMode !== selected) {
-            window.location = window.location.origin + query;
+            window.location = window.location.origin + window.location.pathname + query;
           }
           break;
       }
@@ -172,7 +172,7 @@ const MenuBar = (props) => {
   const handleCreateChallenge = (disks, columns, wins) => {
     setChallengeOpen(false);
     const query = getChallengeQuery(disks, columns, wins);
-    window.location = window.location.origin + query;
+    window.location = window.location.origin + window.location.pathname + query;
   }
   
   return (
