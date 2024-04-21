@@ -90,6 +90,8 @@ function App() {
       words.wordList.splice(20, 1, 'hey');
       words.wordList.splice(21, 1, 'need');
       words.wordList.splice(23, 1, 'nurse');
+      words.wordList.splice(28, 1, 'the');
+      words.wordList.splice(37, 1, 'bass');
       words.wordList.splice(292, 1, 'turkey');
       words.wordList.splice(323, 1, 'giraffe');
       words.wordList.splice(591, 1, 'fan');

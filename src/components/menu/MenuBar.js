@@ -173,6 +173,9 @@ const MenuBar = (props) => {
     setChallengeOpen(false);
     const query = getChallengeQuery(disks, columns, wins);
     window.location = window.location.origin + window.location.pathname + query;
+    setTimeout(function() {
+      setSelectedMode(gameMode);
+    }, 1000);
   }
   
   return (
