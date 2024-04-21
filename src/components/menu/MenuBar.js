@@ -158,6 +158,9 @@ const MenuBar = (props) => {
         default:
           if (gameMode !== selected) {
             window.location = window.location.origin + window.location.pathname + query;
+            setTimeout(function() {
+              setSelectedMode(gameMode);
+            }, 500);
           }
           break;
       }
@@ -175,7 +178,7 @@ const MenuBar = (props) => {
     window.location = window.location.origin + window.location.pathname + query;
     setTimeout(function() {
       setSelectedMode(gameMode);
-    }, 1000);
+    }, 500);
   }
   
   return (
