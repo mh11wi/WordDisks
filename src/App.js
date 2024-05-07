@@ -7,7 +7,7 @@ import MenuBar from 'components/menu/MenuBar';
 import UnlimitedMode from 'components/game/modes/unlimited/UnlimitedMode';
 import ChallengeMode from 'components/game/modes/challenge/ChallengeMode';
 import useWindowOrientation from 'hooks/useWindowOrientation';
-import { isTouchDevice } from 'helpers/app';
+import { isTouchDevice, getPageScale } from 'helpers/app';
 import { diskMarks, columnMarks } from 'helpers/config';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -34,7 +34,7 @@ const theme = createTheme({
       secondary: green[500],
       dark: green[700]
     },
-  },
+  }
 });
 
 const adStyle = {
@@ -70,7 +70,7 @@ function App() {
   const [challengeDisks, setChallengeDisks] = useState(3);
   const [challengeColumns, setChallengeColumns] = useState(4);
   const [challengeTargetWins, setChallengeTargetWins] = useState(10);
-    const [challengeStats, setChallengeStats] = useState(diskMarks.map((mark) => {
+  const [challengeStats, setChallengeStats] = useState(diskMarks.map((mark) => {
     return {
       count: parseInt(localStorage.getItem(`wd-challengeStats-${mark.value}`)) || 0,
       average: parseFloat(localStorage.getItem(`wd-challengeAverage-${mark.value}`)) || 0,
@@ -211,7 +211,7 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        {orientation === 'landscape'&& !resizing && 
+        {orientation === 'landscape' && !resizing && 
           <Box className="vertical-ad-left">
             <AdSense.Google
               client="ca-pub-9808989635264198"
@@ -294,7 +294,7 @@ function App() {
               slot="2074941876"
               style={adStyle}
               format=""
-              responsive="true"
+              responsive={getPageScale() == 1}
             />
           </Box>
         }
