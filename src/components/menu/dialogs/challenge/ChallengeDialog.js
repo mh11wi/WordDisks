@@ -16,7 +16,16 @@ const ChallengeDialog = (props) => {
   // State of dialog settings, only persisting to props on submit
   const [challengeDisks, setChallengeDisks] = useState(props.numberOfDisks);
   const [challengeColumns, setChallengeColumns] = useState(props.numberOfColumns);
-  const [challengeTargetWins, setChallengeTargetWins] = useState(props.targetWins);
+  const [challengeTargetWins, setChallengeTargetWins] = useState(winMarks.map((mark) => mark.value).indexOf(props.targetWins));
+  
+  const scaledWinValue = (index) => {
+    return winMarks[index].value;
+  }
+  
+  const scaledWinMarks = winMarks.map((mark, index) => ({
+    value: index,
+    label: scaledWinValue(index)
+  }));
   
   const onWinsChange = (event, newValue) => {
     setChallengeTargetWins(newValue);
@@ -31,7 +40,7 @@ const ChallengeDialog = (props) => {
   }
   
   const handleClickCreate = () => {
-    props.onCreate(challengeDisks, challengeColumns, challengeTargetWins);
+    props.onCreate(challengeDisks, challengeColumns, scaledWinValue(challengeTargetWins));
   }
   
   return (
@@ -54,9 +63,10 @@ const ChallengeDialog = (props) => {
             value={challengeTargetWins}
             onChangeCommitted={onWinsChange}
             step={null}
-            min={winMarks[0].value}
-            max={winMarks[winMarks.length - 1].value}
-            marks={winMarks}
+            min={scaledWinMarks[0].value}
+            max={scaledWinMarks[scaledWinMarks.length - 1].value}
+            marks={scaledWinMarks}
+            scale={scaledWinValue}
           />
         </DialogContentText>
         
