@@ -59,6 +59,7 @@ function App() {
     localStorage.getItem('wd-useSwipeMode') ? localStorage.getItem('wd-useSwipeMode') === 'true' : isTouchDevice()
   );
   const [timerStatus, setTimerStatus] = useState(null);
+  const [showAds, setShowAds] = useState(false);
   
   // Unlimited Mode State
   const [urlGame, setUrlGame] = useState(null);
@@ -115,11 +116,13 @@ function App() {
     }
     
     fetchWords();
+    window.adConfig({preloadAdBreaks: 'on'});
+    setTimeout(function() { setShowAds(true) }, 120000);
   }, []);
   
   useEffect(() => {
     if (wordsList) {
-      const params = new URLSearchParams(window.location.search); 
+      const params = new URLSearchParams(window.location.search);
       
       try {
         if (params.get('disks')) {
@@ -179,7 +182,6 @@ function App() {
           setChallengeDisks(numberOfDisks);
           setChallengeColumns(numberOfColumns);
           setChallengeTargetWins(numberOfWins);
-          window.adConfig({preloadAdBreaks: 'on'});
         
         } else {
           // Load unlimited mode otherwise
@@ -240,7 +242,8 @@ function App() {
               useSwipe, 
               handleChangeUseSwipe,
               timerStatus,
-              setTimerStatus
+              setTimerStatus,
+              showAds
             }}
           >
             {gameMode &&

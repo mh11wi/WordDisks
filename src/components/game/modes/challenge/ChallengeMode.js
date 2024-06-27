@@ -24,7 +24,7 @@ function getRunningAverage(n, oldAverage, newVal) {
 
 const ChallengeMode = (props) => {
   const gameRef = useRef();
-  const { disksText, setDisksText, setRotatedDisksText, timerStatus, setTimerStatus } = useContext(GameContext);
+  const { disksText, setDisksText, setRotatedDisksText, timerStatus, setTimerStatus, showAds } = useContext(GameContext);
   const { seconds, minutes, hours, start, pause, reset } = useStopwatch({ autoStart: false });
   const [wins, setWins] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -54,10 +54,12 @@ const ChallengeMode = (props) => {
   }, [wins, props.numberOfColumns, props.numberOfDisks, props.targetWins]);
   
   const handleClickReplay = () => {
-    showInterstitialAd(function() {
-      // Ensure timer is 00:00:00 when the ad is over
-      reset();
-    });
+    if (showAds) {
+      showInterstitialAd(function() {
+        // Ensure timer is 00:00:00 when the ad is over
+        reset();
+      });
+    }
     
     setWins(0);
     reset();
