@@ -1,6 +1,8 @@
 import { act, render, screen, fireEvent } from '@testing-library/react';
 import App from 'src/App';
 
+window.adConfig = vi.fn();
+
 vi.mock('random-words', async (importOriginal) => {
   const mod = await importOriginal();
   const mockWordList = [];
