@@ -78,6 +78,8 @@ function WordDisks() {
       words.wordList.splice(49, 1, 'boots');
       words.wordList.splice(57, 1, 'crush');
       words.wordList.splice(64, 1, 'fault');
+      words.wordList.splice(66, 1, 'bye');
+      words.wordList.splice(68, 1, 'feather');
       words.wordList.splice(292, 1, 'turkey');
       words.wordList.splice(323, 1, 'giraffe');
       words.wordList.splice(591, 1, 'fan');
