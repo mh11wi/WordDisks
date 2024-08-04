@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { useTheme } from '@mui/material/styles';
 import {
   Button, 
   Dialog, 
@@ -12,11 +13,13 @@ import {
 } from '@mui/material';
 import { isTouchDevice } from 'helpers/app';
 import { diskMarks, columnMarks } from 'helpers/config';
-import { GameContext } from 'src/App';
+import { GameContext, ColorModeContext } from 'src/App';
 
 
 const SettingsDialog = (props) => {
+  const theme = useTheme();
   const { gameMode, useUppercase, handleChangeUseUppercase, useSwipe, handleChangeUseSwipe } = useContext(GameContext);
+  const colorMode = useContext(ColorModeContext);
   
   const onDisksChange = (event, newValue) => {
     props.setNumberOfDisks(newValue);
@@ -32,6 +35,10 @@ const SettingsDialog = (props) => {
   
   const onSwipeChange = (event, newValue) => {
     handleChangeUseSwipe(newValue);
+  }
+  
+  const onDarkThemeChange = (event, newValue) => {
+    colorMode.toggleColorMode(newValue ? 'dark' : 'light');
   }
   
   return (
@@ -87,6 +94,17 @@ const SettingsDialog = (props) => {
             inputProps={{ 'aria-labelledby': 'uppercase-switch' }}
             checked={useUppercase}
             onChange={onUppercaseChange}
+          />
+        </DialogContentText>
+        
+        <DialogContentText component="div" sx={{ pt: 2 }}>
+          <Typography id="dark-theme-switch">
+            Dark theme
+          </Typography>
+          <Switch
+            inputProps={{ 'aria-labelledby': 'dark-theme-switch' }}
+            checked={theme.palette.mode === 'dark'}
+            onChange={onDarkThemeChange}
           />
         </DialogContentText>
         

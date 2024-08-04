@@ -66,7 +66,7 @@ const DictionaryDialog = forwardRef((props, ref) => {
         {data &&
           <TableContainer component={Paper}>
             <Table aria-label="Table of Words" align="center">
-              <TableHead sx={{ backgroundColor: theme.palette.action.hover }}>
+              <TableHead sx={{ bgcolor: theme.palette.action.hover }}>
                 <TableRow>
                   <TableCell>Column</TableCell>
                   <TableCell>Word</TableCell>
@@ -80,8 +80,8 @@ const DictionaryDialog = forwardRef((props, ref) => {
                       key={index}
                       sx={{
                         '&:last-child td, &:last-child th': { border: 0 },
-                        backgroundColor: row.options.inList ? theme.palette.success.light : 'inherit',
-                        td: { color: row.options.inList ? theme.palette.success.dark : 'inherit' }
+                        bgcolor: row.options.inList ? (theme.palette.mode === 'dark' ? theme.palette.success.dark : theme.palette.success.light) : 'inherit',
+                        td: { color: row.options.inList ? (theme.palette.mode === 'dark' ? theme.palette.success.light : theme.palette.success.dark) : 'inherit' }
                       }}
                     >
                       <WordDetails 

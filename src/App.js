@@ -1,5 +1,5 @@
-import { createContext, useEffect, useState } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createContext, useEffect, useMemo, useState } from 'react';
+import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import { green, grey, teal } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import AdSense from 'react-adsense';
@@ -16,27 +16,6 @@ import '@fontsource/roboto/700.css';
 import 'src/App.css';
 
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: teal[100],
-      main: teal[500],
-      dark: teal[800]
-    },
-    secondary: {
-      light: grey[50],
-      main: grey[300],
-      dark: grey[700]
-    },
-    success: {
-      light: green[50],
-      main: green[300],
-      secondary: green[500],
-      dark: green[700]
-    },
-  }
-});
-
 const adStyle = {
   display: 'block',
   width: 'calc(100% - 1rem)',
@@ -45,8 +24,10 @@ const adStyle = {
 };
 
 export const GameContext = createContext();
+export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
-function App() {
+function WordDisks() {
+  const theme = useTheme();
   const { orientation, resizing } = useWindowOrientation();
   
   // Game Context State
@@ -215,98 +196,139 @@ function App() {
   }
   
   return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        {orientation === 'landscape' && !resizing && 
-          <Box className="vertical-ad-left">
-            <AdSense.Google
-              client="ca-pub-9808989635264198"
-              slot="9091776362"
-              style={adStyle}
-              format=""
-              responsive="true"
-            />
-          </Box>
-        }
-        <Box role="main" className="Main">
-          <GameContext.Provider 
-            value={{
-              gameMode,
-              wordsList, 
-              disksText, 
-              setDisksText, 
-              rotatedDisksText, 
-              setRotatedDisksText, 
-              useUppercase, 
-              handleChangeUseUppercase, 
-              useSwipe, 
-              handleChangeUseSwipe,
-              timerStatus,
-              setTimerStatus,
-              showAds
-            }}
-          >
-            {gameMode &&
-              <MenuBar 
-                unlimitedDisks={unlimitedDisks}
-                setUnlimitedDisks={handleChangeUnlimitedDisks}
-                unlimitedColumns={unlimitedColumns}
-                setUnlimitedColumns={handleChangeUnlimitedColumns}
-                unlimitedStats={unlimitedStats}
-                challengeDisks={challengeDisks}
-                challengeColumns={challengeColumns}
-                challengeTargetWins={challengeTargetWins}
-                challengeStats={challengeStats}
-              />
-            }
-            
-            {gameMode === 'unlimited' &&
-              <UnlimitedMode
-                firstGame={urlGame}
-                stats={unlimitedStats}
-                setStats={setUnlimitedStats}
-                numberOfDisks={unlimitedDisks}
-                numberOfColumns={unlimitedColumns}
-                buttonTransition={!resizing}
-              />
-            }
-            
-            {gameMode === 'challenge' && 
-              <ChallengeMode 
-                stats={challengeStats}
-                setStats={setChallengeStats}
-                numberOfDisks={challengeDisks}
-                numberOfColumns={challengeColumns}
-                targetWins={challengeTargetWins}
-                buttonTransition={!resizing}
-              />
-            }
-          </GameContext.Provider>
+    <Box className="App" sx={{ bgcolor: theme.palette.background.default, boxShadow: `inset 10000px 10000px ${theme.palette.action.hover}` }}>
+      {orientation === 'landscape' && !resizing && 
+        <Box className="vertical-ad-left">
+          <AdSense.Google
+            client="ca-pub-9808989635264198"
+            slot="9091776362"
+            style={adStyle}
+            format=""
+            responsive="true"
+          />
         </Box>
-        {orientation === 'landscape' && !resizing && 
-          <Box className="vertical-ad-right">
-            <AdSense.Google
-              client="ca-pub-9808989635264198"
-              slot="6465613026"
-              style={adStyle}
-              format=""
-              responsive="true"
+      }
+      <Box role="main" className="Main" sx={{ bgcolor: theme.palette.background.default }}>
+        <GameContext.Provider 
+          value={{
+            gameMode,
+            wordsList, 
+            disksText, 
+            setDisksText, 
+            rotatedDisksText, 
+            setRotatedDisksText, 
+            useUppercase, 
+            handleChangeUseUppercase, 
+            useSwipe, 
+            handleChangeUseSwipe,
+            timerStatus,
+            setTimerStatus,
+            showAds
+          }}
+        >
+          {gameMode &&
+            <MenuBar 
+              unlimitedDisks={unlimitedDisks}
+              setUnlimitedDisks={handleChangeUnlimitedDisks}
+              unlimitedColumns={unlimitedColumns}
+              setUnlimitedColumns={handleChangeUnlimitedColumns}
+              unlimitedStats={unlimitedStats}
+              challengeDisks={challengeDisks}
+              challengeColumns={challengeColumns}
+              challengeTargetWins={challengeTargetWins}
+              challengeStats={challengeStats}
             />
-          </Box>
-        }
-        {orientation === 'portrait' && !resizing && 
-          <Box className="horizontal-ad">
-            <AdSense.Google
-              client="ca-pub-9808989635264198"
-              slot="2074941876"
-              style={adStyle}
-              format=""
-              responsive={getPageScale() == 1}
+          }
+          
+          {gameMode === 'unlimited' &&
+            <UnlimitedMode
+              firstGame={urlGame}
+              stats={unlimitedStats}
+              setStats={setUnlimitedStats}
+              numberOfDisks={unlimitedDisks}
+              numberOfColumns={unlimitedColumns}
+              buttonTransition={!resizing}
             />
-          </Box>
-        }
+          }
+          
+          {gameMode === 'challenge' && 
+            <ChallengeMode 
+              stats={challengeStats}
+              setStats={setChallengeStats}
+              numberOfDisks={challengeDisks}
+              numberOfColumns={challengeColumns}
+              targetWins={challengeTargetWins}
+              buttonTransition={!resizing}
+            />
+          }
+        </GameContext.Provider>
+      </Box>
+      {orientation === 'landscape' && !resizing && 
+        <Box className="vertical-ad-right">
+          <AdSense.Google
+            client="ca-pub-9808989635264198"
+            slot="6465613026"
+            style={adStyle}
+            format=""
+            responsive="true"
+          />
+        </Box>
+      }
+      {orientation === 'portrait' && !resizing && 
+        <Box className="horizontal-ad">
+          <AdSense.Google
+            client="ca-pub-9808989635264198"
+            slot="2074941876"
+            style={adStyle}
+            format=""
+            responsive={getPageScale() == 1}
+          />
+        </Box>
+      }
+    </Box>
+  );
+}
+
+function App() {
+  const [mode, setMode] = useState(localStorage.getItem('wd-colorMode') || 'light');
+  const colorMode = useMemo(() => ({
+    toggleColorMode: () => {
+      setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+    },
+  }), []);
+
+  const theme = useMemo(() => createTheme({
+    palette: {
+      mode,
+      primary: {
+        light: teal[100],
+        main: teal[500],
+        dark: teal[800]
+      },
+      secondary: {
+        light: grey[50],
+        main: grey[300],
+        dark: grey[600]
+      },
+      success: {
+        light: green[50],
+        main: green[300],
+        secondary: green[500],
+        dark: green[700]
+      }
+    },
+  }), [mode]);
+  
+  useEffect(() => {
+    localStorage.setItem('wd-colorMode', mode);
+  }, [mode]);
+
+  return (
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <WordDisks />
       </ThemeProvider>
-    </div>
+    </ColorModeContext.Provider>
   );
 }
 
