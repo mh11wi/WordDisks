@@ -16,3 +16,5 @@ The following settings are configurable in the game:
 - whether letters should be uppercase or lowercase
 
 - on mobile touch devices, whether disks can be rotated via swipe gestures instead
+
+- dark or light theme
